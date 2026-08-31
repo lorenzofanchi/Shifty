@@ -44,8 +44,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let userDefaults = UserDefaults.standard
         
-        // Initialize Sparkle
-        SUUpdater.shared()
+        // Initialize Sparkle. The updater lives in PrefAboutViewController;
+        // touching it here starts automatic update checks at launch.
+        _ = ShiftyUpdater
         
         
         let versionObject = Bundle.main.infoDictionary?["CFBundleShortVersionString"]

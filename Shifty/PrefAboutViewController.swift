@@ -9,7 +9,8 @@ import Cocoa
 import Sparkle
 import MASPreferences_Shifty
 
-let ShiftyUpdater = SUUpdater()
+let ShiftyUpdater = SPUStandardUpdaterController(
+    startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
 @objcMembers
 class PrefAboutViewController: NSViewController, MASPreferencesViewController {
@@ -82,8 +83,8 @@ class PrefAboutViewController: NSViewController, MASPreferencesViewController {
     }
 
     @IBAction func creditsButtonClicked(_ sender: Any) {
-        guard let path = Bundle.main.path(forResource: "credits", ofType: "rtfd") else { return }
-        NSWorkspace.shared.openFile(path)
+        guard let url = Bundle.main.url(forResource: "credits", withExtension: "rtfd") else { return }
+        NSWorkspace.shared.open(url)
     }
 }
 

@@ -405,8 +405,8 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
     
     func assignKeyboardShortcutToMenuItem(_ menuItem: NSMenuItem, userDefaultsKey: String) {
-        if let data = UserDefaults.standard.value(forKey: userDefaultsKey),
-            let shortcut = NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as? MASShortcut {
+        if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
+            let shortcut = try? NSKeyedUnarchiver.unarchivedObject(ofClass: MASShortcut.self, from: data) {
             let flags = shortcut.modifierFlags
             menuItem.keyEquivalentModifierMask = flags
             menuItem.keyEquivalent = shortcut.keyCodeString.lowercased()

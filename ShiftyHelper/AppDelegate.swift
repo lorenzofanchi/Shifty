@@ -41,16 +41,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                                 selector: #selector(NSApplication.terminate(_:)),
                                                                 name: Notification.Name("terminateApp"),
                                                                 object: mainAppIdentifier)
-            let path = Bundle.main.bundlePath as NSString
-            var components = path.pathComponents
-            components.removeLast()
-            components.removeLast()
-            components.removeLast()
-            components.append("MacOS")
-            components.append("Shifty")
-            
-            let newPath = NSString.path(withComponents: components)
-            NSWorkspace.shared.launchApplication(newPath)
+            // Shifty.app/Contents/Library/LoginItems/ShiftyHelper.app -> Shifty.app
+            let mainAppURL = Bundle.main.bundleURL
+                .deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .deletingLastPathComponent()
+            NSWorkspace.shared.openApplication(at: mainAppURL,
+                                               configuration: NSWorkspace.OpenConfiguration())
         } else {
             NSApp.terminate(self)
         }

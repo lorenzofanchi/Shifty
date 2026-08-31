@@ -10,7 +10,7 @@ target 'Shifty' do
   pod 'MASPreferences+Shifty'
   pod 'MASShortcut'
   pod 'PublicSuffix'
-  pod 'Sparkle'
+  pod 'Sparkle', '2.9.6'
   pod 'SwiftLog'
 
 end

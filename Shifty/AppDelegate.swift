@@ -258,7 +258,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     
-    @available(macOS 12.0, *)
     func application(_ application: NSApplication, handlerFor intent: INIntent) -> Any? {
         if intent is GetNightShiftStateIntent {
             return GetNightShiftStateIntentHandler()

@@ -22,11 +22,7 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     var viewIdentifier: String = "PrefGeneralViewController"
 
     var toolbarItemImage: NSImage? {
-        if #available(macOS 11.0, *) {
-            return NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
-        } else {
-            return NSImage(named: NSImage.preferencesGeneralName)
-        }
+        return NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
     }
 
     var toolbarItemLabel: String? {
@@ -73,11 +69,7 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
         }
 
         //Hide True Tone settings on unsupported computers
-        if #available(macOS 10.14, *) {
-            trueToneStackView.isHidden = CBTrueToneClient.shared.state == .unsupported
-        } else {
-            trueToneStackView.isHidden = true
-        }
+        trueToneStackView.isHidden = CBTrueToneClient.shared.state == .unsupported
         
         defaultDarkModeState = SLSGetAppearanceThemeLegacy()
 
@@ -158,16 +150,14 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     }
     
     @IBAction func setTrueToneControl(_ sender: NSButtonCell) {
-        if #available(macOS 10.14, *) {
-            if sender.state == .on {
-                if NightShiftManager.shared.isDisableRuleActive {
-                    CBTrueToneClient.shared.isTrueToneEnabled = false
-                }
-            } else {
-                CBTrueToneClient.shared.isTrueToneEnabled = true
+        if sender.state == .on {
+            if NightShiftManager.shared.isDisableRuleActive {
+                CBTrueToneClient.shared.isTrueToneEnabled = false
             }
-            logw("True Tone control set to \(sender.state.rawValue)")
+        } else {
+            CBTrueToneClient.shared.isTrueToneEnabled = true
         }
+        logw("True Tone control set to \(sender.state.rawValue)")
     }
     
     @IBAction func analyticsDetailClicked(_ sender: Any) {
@@ -210,9 +200,7 @@ class PrefWindowController: MASPreferencesWindowController {
         super.windowDidLoad()
         window?.styleMask = [.titled, .closable]
         
-        if #available(macOS 11.0, *) {
-            window?.toolbarStyle = .preference
-        }
+        window?.toolbarStyle = .preference
     }
     
     

@@ -7,7 +7,6 @@
 
 import Cocoa
 
-@available(macOS 11.0, *)
 class SwitchView: NSView {
     private var toggleSwitch = NSSwitch()
     private var onSwitchToggle: (Bool) -> Void

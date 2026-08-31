@@ -80,30 +80,28 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         descriptionMenuItem.isEnabled = false
         sliderMenuItem.view = sliderView
         
-        if #available(macOS 11.0, *) {
-            nightShiftSwitchView = SwitchView(title: "Night Shift", onSwitchToggle: { isSwitchEnabled in
-                NightShiftManager.shared.isNightShiftEnabled = isSwitchEnabled
-                self.updateMenuItems()
-            })
-            guard let nightShiftSwitchView = nightShiftSwitchView else { return }
-            
-            nightShiftSwitchView.frame = CGRect(
-                x: 0, y: 0,
-                width: statusMenu.size.width,
-                height: nightShiftSwitchView.fittingSize.height)
-            powerMenuItem.view = nightShiftSwitchView
-            
-            trueToneSwitchView = SwitchView(title: "True Tone", onSwitchToggle: { isSwitchEnabled in
-                CBTrueToneClient.shared.isTrueToneEnabled = isSwitchEnabled
-                self.updateMenuItems()
-            })
-            guard let trueToneSwitchView = trueToneSwitchView else { return }
-            
-            trueToneSwitchView.frame = CGRect(
-                x: 0, y: 0,
-                width: statusMenu.size.width,
-                height: trueToneSwitchView.fittingSize.height)
-        }
+        nightShiftSwitchView = SwitchView(title: "Night Shift", onSwitchToggle: { isSwitchEnabled in
+            NightShiftManager.shared.isNightShiftEnabled = isSwitchEnabled
+            self.updateMenuItems()
+        })
+        guard let nightShiftSwitchView = nightShiftSwitchView else { return }
+        
+        nightShiftSwitchView.frame = CGRect(
+            x: 0, y: 0,
+            width: statusMenu.size.width,
+            height: nightShiftSwitchView.fittingSize.height)
+        powerMenuItem.view = nightShiftSwitchView
+        
+        trueToneSwitchView = SwitchView(title: "True Tone", onSwitchToggle: { isSwitchEnabled in
+            CBTrueToneClient.shared.isTrueToneEnabled = isSwitchEnabled
+            self.updateMenuItems()
+        })
+        guard let trueToneSwitchView = trueToneSwitchView else { return }
+        
+        trueToneSwitchView.frame = CGRect(
+            x: 0, y: 0,
+            width: statusMenu.size.width,
+            height: trueToneSwitchView.fittingSize.height)
 
         disableHourMenuItem.title = NSLocalizedString("menu.disable_hour", comment: "Disable for an hour")
         disableCustomMenuItem.title = NSLocalizedString("menu.disable_custom", comment: "Disable for custom time...")
@@ -178,18 +176,16 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             sliderView.shiftSlider.isEnabled = false
         }
         
-        if #available(macOS 11.0, *) {
-            if let nightShiftSwitchView = nightShiftSwitchView as? SwitchView {
-                nightShiftSwitchView.switchState = NightShiftManager.shared.isNightShiftEnabled
+        if let nightShiftSwitchView = nightShiftSwitchView as? SwitchView {
+            nightShiftSwitchView.switchState = NightShiftManager.shared.isNightShiftEnabled
+        }
+        if CBTrueToneClient.shared.isTrueToneSupported && CBTrueToneClient.shared.isTrueToneAvailable {
+            trueToneMenuItem.view = trueToneSwitchView
+            if let trueToneSwitchView = trueToneSwitchView as? SwitchView {
+                trueToneSwitchView.switchState = CBTrueToneClient.shared.isTrueToneEnabled
             }
-            if CBTrueToneClient.shared.isTrueToneSupported && CBTrueToneClient.shared.isTrueToneAvailable {
-                trueToneMenuItem.view = trueToneSwitchView
-                if let trueToneSwitchView = trueToneSwitchView as? SwitchView {
-                    trueToneSwitchView.switchState = CBTrueToneClient.shared.isTrueToneEnabled
-                }
-            } else {
-                trueToneMenuItem.view = nil
-            }
+        } else {
+            trueToneMenuItem.view = nil
         }
         
         
@@ -295,34 +291,30 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         
         
         // MARK: toggle True Tone
-        if #available(macOS 10.14, *) {
-            trueToneMenuItem.isHidden = false
-            trueToneMenuItem.isEnabled = true
-            
-            switch CBTrueToneClient.shared.state {
-            case .unsupported:
-                trueToneMenuItem.isHidden = true
-            case .unavailable:
-                trueToneMenuItem.isEnabled = false
-                trueToneMenuItem.title = NSLocalizedString("menu.true_tone_unavailable", comment: "True Tone is not available")
-            case .enabled:
-                trueToneMenuItem.title = NSLocalizedString("menu.true_tone_off", comment: "Turn off True Tone")
-            case .disabled:
-                if NightShiftManager.shared.isDisableRuleActive {
-                    trueToneMenuItem.isEnabled = false
-                    if RuleManager.shared.isDisabledForDomain {
-                        trueToneMenuItem.title = String(format: NSLocalizedString("menu.true_tone_disabled_for", comment: "True Tone is disabled for %@"), currentDomain ?? "")
-                    } else if RuleManager.shared.ruleForCurrentSubdomain == .disabled {
-                        trueToneMenuItem.title = String(format: NSLocalizedString("menu.true_tone_disabled_for", comment: "True Tone is disabled for %@"), currentSubdomain ?? "")
-                    } else {
-                        trueToneMenuItem.title = String(format: NSLocalizedString("menu.true_tone_disabled_for", comment: "True Tone is disabled for %@"), currentAppName)
-                    }
-                } else {
-                    trueToneMenuItem.title = NSLocalizedString("menu.true_tone_on", comment: "Turn on True Tone")
-                }
-            }
-        } else {
+        trueToneMenuItem.isHidden = false
+        trueToneMenuItem.isEnabled = true
+        
+        switch CBTrueToneClient.shared.state {
+        case .unsupported:
             trueToneMenuItem.isHidden = true
+        case .unavailable:
+            trueToneMenuItem.isEnabled = false
+            trueToneMenuItem.title = NSLocalizedString("menu.true_tone_unavailable", comment: "True Tone is not available")
+        case .enabled:
+            trueToneMenuItem.title = NSLocalizedString("menu.true_tone_off", comment: "Turn off True Tone")
+        case .disabled:
+            if NightShiftManager.shared.isDisableRuleActive {
+                trueToneMenuItem.isEnabled = false
+                if RuleManager.shared.isDisabledForDomain {
+                    trueToneMenuItem.title = String(format: NSLocalizedString("menu.true_tone_disabled_for", comment: "True Tone is disabled for %@"), currentDomain ?? "")
+                } else if RuleManager.shared.ruleForCurrentSubdomain == .disabled {
+                    trueToneMenuItem.title = String(format: NSLocalizedString("menu.true_tone_disabled_for", comment: "True Tone is disabled for %@"), currentSubdomain ?? "")
+                } else {
+                    trueToneMenuItem.title = String(format: NSLocalizedString("menu.true_tone_disabled_for", comment: "True Tone is disabled for %@"), currentAppName)
+                }
+            } else {
+                trueToneMenuItem.title = NSLocalizedString("menu.true_tone_on", comment: "Turn on True Tone")
+            }
         }
     }
     
@@ -518,9 +510,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
     
     @IBAction func toggleTrueTone(_ sender: Any) {
-        if #available(macOS 10.14, *) {
-            CBTrueToneClient.shared.isTrueToneEnabled = !CBTrueToneClient.shared.isTrueToneEnabled
-        }
+        CBTrueToneClient.shared.isTrueToneEnabled = !CBTrueToneClient.shared.isTrueToneEnabled
     }
     
     

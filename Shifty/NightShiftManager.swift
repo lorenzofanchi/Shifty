@@ -167,9 +167,7 @@ class NightShiftManager {
         case .nightShiftDisableRuleActivated:
             client.setNightShiftEnabled(false)
             if UserDefaults.standard.bool(forKey: Keys.trueToneControl) {
-                if #available(macOS 10.14, *) {
-                    CBTrueToneClient.shared.isTrueToneEnabled = false
-                }
+                CBTrueToneClient.shared.isTrueToneEnabled = false
             }
         case .nightShiftDisableRuleDeactivated:
             if !isDisabledWithTimer && !isDisableRuleActive {
@@ -184,9 +182,7 @@ class NightShiftManager {
             }
             
             if !isDisableRuleActive && UserDefaults.standard.bool(forKey: Keys.trueToneControl) {
-                if #available(macOS 10.14, *) {
-                    CBTrueToneClient.shared.isTrueToneEnabled = true
-                }
+                CBTrueToneClient.shared.isTrueToneEnabled = true
             }
         case .nightShiftEnableRuleActivated:
             switch userSet {

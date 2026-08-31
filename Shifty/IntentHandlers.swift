@@ -8,7 +8,6 @@
 import Foundation
 import Intents
 
-@available(macOS 12.0, *)
 class GetNightShiftStateIntentHandler: NSObject, GetNightShiftStateIntentHandling {
     func handle(intent: GetNightShiftStateIntent) async -> GetNightShiftStateIntentResponse {
         let response = GetNightShiftStateIntentResponse(code: .success, userActivity: nil)
@@ -17,7 +16,6 @@ class GetNightShiftStateIntentHandler: NSObject, GetNightShiftStateIntentHandlin
     }
 }
 
-@available(macOS 12.0, *)
 class SetNightShiftStateIntentHandler: NSObject, SetNightShiftStateIntentHandling {
     func handle(intent: SetNightShiftStateIntent) async -> SetNightShiftStateIntentResponse {
         let state = intent.nightShiftState!.boolValue
@@ -33,7 +31,6 @@ class SetNightShiftStateIntentHandler: NSObject, SetNightShiftStateIntentHandlin
     }
 }
 
-@available(macOS 12.0, *)
 class GetColorTemperatureIntentHandler: NSObject, GetColorTemperatureIntentHandling {
     func handle(intent: GetColorTemperatureIntent) async -> GetColorTemperatureIntentResponse {
         let response = GetColorTemperatureIntentResponse(code: .success, userActivity: nil)
@@ -47,7 +44,6 @@ class GetColorTemperatureIntentHandler: NSObject, GetColorTemperatureIntentHandl
     }
 }
 
-@available(macOS 12.0, *)
 class SetColorTemperatureIntentHandler: NSObject, SetColorTemperatureIntentHandling {
     func handle(intent: SetColorTemperatureIntent) async -> SetColorTemperatureIntentResponse {
         let colorTemp = intent.colorTemperature!.floatValue
@@ -64,7 +60,6 @@ class SetColorTemperatureIntentHandler: NSObject, SetColorTemperatureIntentHandl
     }
 }
 
-@available(macOS 12.0, *)
 class SetDisableTimerIntentHandler: NSObject, SetDisableTimerIntentHandling {
     func handle(intent: SetDisableTimerIntent) async -> SetDisableTimerIntentResponse {
         let seconds = intent.duration!.doubleValue
@@ -80,7 +75,6 @@ class SetDisableTimerIntentHandler: NSObject, SetDisableTimerIntentHandling {
     }
 }
 
-@available(macOS 12.0, *)
 class GetTrueToneStateIntentHandler: NSObject, GetTrueToneStateIntentHandling {
     func handle(intent: GetTrueToneStateIntent) async -> GetTrueToneStateIntentResponse {
         switch CBTrueToneClient.shared.state {
@@ -96,7 +90,6 @@ class GetTrueToneStateIntentHandler: NSObject, GetTrueToneStateIntentHandling {
     }
 }
 
-@available(macOS 12.0, *)
 class SetTrueToneStateIntentHandler: NSObject, SetTrueToneStateIntentHandling {
     func handle(intent: SetTrueToneStateIntent) async -> SetTrueToneStateIntentResponse {
         if CBTrueToneClient.shared.isTrueToneSupported == false {

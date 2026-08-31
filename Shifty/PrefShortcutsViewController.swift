@@ -21,11 +21,7 @@ class PrefShortcutsViewController: NSViewController, MASPreferencesViewControlle
     var viewIdentifier: String = "PrefShortcutsViewController"
 
     var toolbarItemImage: NSImage? {
-        if #available(macOS 11.0, *) {
-            return NSImage(systemSymbolName: "command", accessibilityDescription: nil)
-        } else {
-            return #imageLiteral(resourceName: "shortcutsIcon")
-        }
+        return NSImage(systemSymbolName: "command", accessibilityDescription: nil)
     }
 
     var toolbarItemLabel: String? {
@@ -58,14 +54,9 @@ class PrefShortcutsViewController: NSViewController, MASPreferencesViewControlle
         }
         
         //Hide True Tone settings on unsupported computers
-        if #available(macOS 10.14, *) {
-            let trueToneUnsupported = CBTrueToneClient.shared.state == .unsupported
-            toggleTrueToneLabel.isHidden = trueToneUnsupported
-            toggleTrueToneShortcut.isHidden = trueToneUnsupported
-        } else {
-            toggleTrueToneLabel.isHidden = true
-            toggleTrueToneShortcut.isHidden = true
-        }
+        let trueToneUnsupported = CBTrueToneClient.shared.state == .unsupported
+        toggleTrueToneLabel.isHidden = trueToneUnsupported
+        toggleTrueToneShortcut.isHidden = trueToneUnsupported
 
 
         toggleNightShiftShortcut.associatedUserDefaultsKey = Keys.toggleNightShiftShortcut

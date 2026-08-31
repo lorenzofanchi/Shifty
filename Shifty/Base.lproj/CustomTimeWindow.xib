@@ -24,6 +24,14 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="130"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YTT-ok-XCv">
+                        <rect key="frame" x="20" y="45" width="65" height="65"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="65" id="OsD-2Y-1B9"/>
+                            <constraint firstAttribute="width" secondItem="YTT-ok-XCv" secondAttribute="height" multiplier="1:1" id="kN7-u2-9WH"/>
+                        </constraints>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="shiftyCircleIcon" id="H23-Be-uWH"/>
+                    </imageView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="Lby-a4-HBQ">
                         <rect key="frame" x="105" y="61" width="250" height="49"/>
                         <subviews>
@@ -162,7 +170,10 @@ Gw
                     <constraint firstAttribute="bottom" secondItem="CkZ-02-pTf" secondAttribute="bottom" constant="20" id="0bY-wb-eXt"/>
                     <constraint firstAttribute="trailing" secondItem="nlQ-dl-FsZ" secondAttribute="trailing" constant="20" symbolic="YES" id="8b5-Lf-8DT"/>
                     <constraint firstAttribute="trailing" secondItem="Lby-a4-HBQ" secondAttribute="trailing" constant="20" id="J6z-UH-zGc"/>
-                    <constraint firstItem="Lby-a4-HBQ" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="Lby-Ld-001"/>
+                    <constraint firstItem="YTT-ok-XCv" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="9YW-CE-G07"/>
+                    <constraint firstItem="YTT-ok-XCv" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="nwb-kJ-1Fm"/>
+                    <constraint firstItem="Lby-a4-HBQ" firstAttribute="leading" secondItem="YTT-ok-XCv" secondAttribute="trailing" constant="20" id="Hwn-ve-Hzi"/>
+                    <constraint firstItem="CkZ-02-pTf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="YTT-ok-XCv" secondAttribute="bottom" constant="20" id="Btn-Ic-001"/>
                     <constraint firstItem="CkZ-02-pTf" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="OF5-Yj-F1w"/>
                     <constraint firstItem="CkZ-02-pTf" firstAttribute="top" secondItem="Lby-a4-HBQ" secondAttribute="bottom" constant="20" symbolic="YES" id="a8v-W1-Kum"/>
                     <constraint firstItem="Lby-a4-HBQ" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="cZJ-Yu-9tf"/>
@@ -178,5 +189,6 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="shiftyCircleIcon" width="245.75999450683594" height="245.75999450683594"/>
     </resources>
 </document>

@@ -38,13 +38,22 @@ class CustomTimeWindow: NSWindowController {
         // window becomes unmanaged and shows up on every Space.
         window?.collectionBehavior = [.managed, .moveToActiveSpace]
 
-        if UserDefaults.standard.value(forKey: "customTimeWindowFrame") == nil {
+        // The title is already hidden, so the title bar is pure chrome. Let the
+        // content fill the window and drop the bar and its separator hairline.
+        window?.styleMask.insert(.fullSizeContentView)
+        window?.titlebarAppearsTransparent = true
+        window?.titlebarSeparatorStyle = .none
+        // Nothing left to drag the window by otherwise.
+        window?.isMovableByWindowBackground = true
+
+        // New key: the window is ~28pt shorter without the title bar, so a frame
+        // saved by an older build would restore the old height and leave a gap.
+        UserDefaults.standard.removeObject(forKey: "NSWindow Frame customTimeWindowFrame")
+        let saveName = "customTimeWindow"
+
+        if window?.setFrameUsingName(saveName) != true {
             window?.center()
         }
-
-        let saveName = "customTimeWindowFrame"
-
-        window?.setFrameUsingName(saveName)
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name("NSWindowWillCloseNotification"), object: nil, queue: nil) { _ in
             self.window?.saveFrame(usingName: saveName)

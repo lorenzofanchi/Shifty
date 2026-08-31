@@ -69,3 +69,8 @@ fastlane/test_output
 
 # macOS specific
 .DS_Store
+
+# Local
+*.code-workspace
+TODO.md
+.claude/

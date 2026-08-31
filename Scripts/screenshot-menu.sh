@@ -32,11 +32,13 @@ cd "$(dirname "$0")/.."
 #
 # On another display, or after rearranging the menu bar, re-find it with
 # --measure, halving the pixel figures if that display is Retina.
-REGION="1349,0,707,453"
+REGION="1600,0,400,350"
 DELAY=8
 OUT_DIR="docs/en/images"
-LARGE_WIDTH=1413   # matches the sizes the site's responsive swap expects
-SMALL_WIDTH=1061
+# The large image is the capture, untouched: resampling it up to some fixed
+# width only blurs it. The small one is for the site's responsive swap, which
+# picks by filename, not by size.
+SMALL_SCALE=75
 
 # Restore to whatever it was, including absent, rather than assuming a default.
 if DESKTOP_WAS=$(defaults read com.apple.finder CreateDesktop 2>/dev/null); then
@@ -75,15 +77,9 @@ screencapture -T "$DELAY" -x -R "$REGION" "$TMP/shot.png"
 read -r W H < <(sips -g pixelWidth -g pixelHeight "$TMP/shot.png" | awk '/pixel/ {printf "%s ", $2} END {print ""}')
 echo "captured ${W}x${H}"
 
-if [ "$W" -lt "$LARGE_WIDTH" ]; then
-    echo "warning: ${W}px is narrower than the ${LARGE_WIDTH}px the site expects."
-    echo "         Capture on a Retina display, or widen REGION."
-fi
-
 cp "$TMP/shot.png" "$OUT_DIR/shifty-screenshot-large.png"
-sips --resampleWidth "$LARGE_WIDTH" "$OUT_DIR/shifty-screenshot-large.png" >/dev/null
 cp "$TMP/shot.png" "$OUT_DIR/shifty-screenshot-small.png"
-sips --resampleWidth "$SMALL_WIDTH" "$OUT_DIR/shifty-screenshot-small.png" >/dev/null
+sips --resampleWidth "$(( W * SMALL_SCALE / 100 ))" "$OUT_DIR/shifty-screenshot-small.png" >/dev/null
 
 echo
 for f in "$OUT_DIR/shifty-screenshot-large.png" "$OUT_DIR/shifty-screenshot-small.png"; do

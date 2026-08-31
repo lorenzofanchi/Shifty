@@ -47,6 +47,8 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
     var nightShiftSwitchView: NSView?
     var trueToneSwitchView: NSView?
+
+    private var prefsWindowObserver: NSObjectProtocol?
     
     let calendar = NSCalendar(identifier: .gregorian)!
     
@@ -529,14 +531,19 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         // sometimes. A short delay clears tracking whichever order AppKit
         // chooses to send the action in.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            controller.showWindow(sender)
+            // macOS 14's cooperative activation refuses to hand focus to an
+            // accessory app on request: with .accessory set, activate() left
+            // "app active: false" in the log every time another app held focus.
+            // Becoming a regular app for as long as a window is up is the only
+            // thing that reliably works. Costs a Dock icon meanwhile.
+            NSApp.setActivationPolicy(.regular)
+            NSApp.activate()
 
-            // Front even if activation is refused, so it never opens behind the
-            // app that had focus.
+            controller.showWindow(sender)
+            controller.window?.makeKeyAndOrderFront(sender)
             controller.window?.orderFrontRegardless()
 
-            NSApp.activate()
-            controller.window?.makeKeyAndOrderFront(sender)
+            self.restoreAccessoryPolicyWhenClosed(controller.window)
 
             // isActive doesn't update within this run loop turn, so report the
             // settled state. Diagnostic; remove once this is confirmed working.
@@ -545,6 +552,26 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             }
         }
     }
+    
+
+    /// Drops back to a menu bar only app once the window goes away, so the Dock
+    /// icon doesn't outlive it.
+    private func restoreAccessoryPolicyWhenClosed(_ window: NSWindow?) {
+        guard let window = window, prefsWindowObserver == nil else { return }
+
+        prefsWindowObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification,
+            object: window,
+            queue: .main)
+        { [weak self] _ in
+            NSApp.setActivationPolicy(.accessory)
+            if let observer = self?.prefsWindowObserver {
+                NotificationCenter.default.removeObserver(observer)
+                self?.prefsWindowObserver = nil
+            }
+        }
+    }
+    
     
 
     @IBAction func quitClicked(_ sender: NSMenuItem) {

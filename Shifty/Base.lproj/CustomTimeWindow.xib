@@ -43,7 +43,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dph-5v-720">
+                            <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dph-5v-720">
                                 <rect key="frame" x="0.0" y="0.0" width="250" height="22"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="500" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QLa-yb-BfV">
@@ -104,8 +104,6 @@
                                     </textField>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="QLa-yb-BfV" firstAttribute="centerY" secondItem="Dph-5v-720" secondAttribute="centerY" id="9Rl-y0-3VY"/>
-                                    <constraint firstItem="tsZ-Jr-Qrj" firstAttribute="centerY" secondItem="Dph-5v-720" secondAttribute="centerY" id="D5f-LC-j1r"/>
                                     <constraint firstItem="JWZ-rU-Iwf" firstAttribute="leading" secondItem="tsZ-Jr-Qrj" secondAttribute="trailing" constant="4" id="cBz-oo-3dV"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="nuR-8K-Jdb"/>
                                 </constraints>

@@ -49,9 +49,20 @@ class CustomTimeWindow: NSWindowController {
         UserDefaults.standard.removeObject(forKey: "NSWindow Frame customTimeWindowFrame")
         let saveName = "customTimeWindow"
 
-        // Restore the saved position but never the saved size. The size the nib
-        // produces is the one the constraints can satisfy; a size saved by an
-        // older layout can't, and forcing one breaks the layout outright.
+        // Take the height from the layout rather than the nib's contentRect. The
+        // vertical chain is fully pinned, so any mismatch has to go somewhere:
+        // too much and the inputs row stretches, too little and constraints
+        // break. Width stays as designed, since the row has a flexible spacer.
+        if let window = window, let content = window.contentView {
+            content.layoutSubtreeIfNeeded()
+            let fitting = content.fittingSize
+            if fitting.height > 0 {
+                window.setContentSize(NSSize(width: content.frame.width, height: fitting.height))
+            }
+        }
+
+        // Restore the saved position but never the saved size: a frame saved
+        // before a layout change would pin the window to the old dimensions.
         let nibSize = window?.frame.size
 
         if window?.setFrameUsingName(saveName) != true {

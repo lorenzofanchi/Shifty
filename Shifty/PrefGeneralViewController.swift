@@ -142,6 +142,14 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
 
                 UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
                 NSApp.runModal(for: AccessibilityWindow().window!)
+
+                // Access may have been granted while the prompt was up. Read the
+                // real state rather than waiting on the accessibility API
+                // notification, which isn't reliably delivered during a modal
+                // run loop. The checkbox is bound to this default, so it follows.
+                let isTrusted = UIElement.isProcessTrusted()
+                UserDefaults.standard.set(isTrusted, forKey: Keys.isWebsiteControlEnabled)
+                logw("Website control enabled after prompt: \(isTrusted)")
             }
         } else {
             BrowserManager.shared.stopBrowserWatcher()

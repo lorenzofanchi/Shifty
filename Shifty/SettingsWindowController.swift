@@ -58,6 +58,9 @@ final class SettingsWindowController: NSWindowController {
         window.title = title
         window.toolbarStyle = .preference
         window.isReleasedWhenClosed = false
+        // The window is created once and reused, so without this it reopens on
+        // whichever Space it was last closed on rather than the current one.
+        window.collectionBehavior = [.moveToActiveSpace]
 
         super.init(window: window)
     }

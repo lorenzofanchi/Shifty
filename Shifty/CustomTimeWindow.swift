@@ -33,6 +33,10 @@ class CustomTimeWindow: NSWindowController {
     override func windowDidLoad() {
         super.windowDidLoad()
 
+        // Reused across openings, so it would otherwise reappear on whichever
+        // Space it was last closed on.
+        window?.collectionBehavior = [.moveToActiveSpace]
+
         if UserDefaults.standard.value(forKey: "customTimeWindowFrame") == nil {
             window?.center()
         }

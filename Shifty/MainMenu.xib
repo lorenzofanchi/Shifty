@@ -38,6 +38,7 @@
                 <outlet property="statusMenu" destination="YaK-8p-dol" id="uua-tx-AWw"/>
                 <outlet property="sunIcon" destination="Dky-H2-15i" id="AXj-lL-QbW"/>
                 <outlet property="trueToneMenuItem" destination="fW8-W0-ja9" id="idL-jg-jCv"/>
+                <outlet property="trueToneSeparator" destination="Myq-mS-cHa" id="tTs-Sp-Rt1"/>
             </connections>
         </customObject>
         <menu autoenablesItems="NO" id="YaK-8p-dol" userLabel="StatusMenu">

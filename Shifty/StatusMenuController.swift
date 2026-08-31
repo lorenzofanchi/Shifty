@@ -16,6 +16,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBOutlet weak var statusMenu: NSMenu!
     @IBOutlet weak var powerMenuItem: NSMenuItem!
     @IBOutlet weak var trueToneMenuItem: NSMenuItem!
+    @IBOutlet weak var trueToneSeparator: NSMenuItem!
     @IBOutlet weak var sliderMenuItem: NSMenuItem!
     @IBOutlet weak var descriptionMenuItem: NSMenuItem!
     @IBOutlet weak var disableCurrentAppMenuItem: NSMenuItem!
@@ -315,6 +316,10 @@ class StatusMenuController: NSObject, NSMenuDelegate {
                 trueToneMenuItem.title = NSLocalizedString("menu.true_tone_on", comment: "Turn on True Tone")
             }
         }
+
+        // Without this the menu shows two dividers in a row on a Mac that has
+        // no True Tone.
+        trueToneSeparator.isHidden = trueToneMenuItem.isHidden
     }
     
     
@@ -514,13 +519,18 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
 
     @IBAction func preferencesClicked(_ sender: NSMenuItem) {
-        NSApp.activate(ignoringOtherApps: true)
-
         guard let controller = (NSApp.delegate as? AppDelegate)?.preferenceWindowController else { return }
-        controller.showWindow(sender)
-        // As with the custom time window: an agent app's window doesn't reliably
-        // come forward from a menu action on activation alone.
-        controller.window?.orderFrontRegardless()
+
+        // The menu is still tracking when this action fires, and an activation
+        // request made during menu tracking is dropped, which left the window
+        // on screen but needing a click. Wait for the menu to finish closing.
+        DispatchQueue.main.async {
+            NSApp.activate(ignoringOtherApps: true)
+            controller.showWindow(sender)
+            controller.window?.makeKeyAndOrderFront(sender)
+
+            logw("Preferences opened (app active: \(NSApp.isActive), window key: \(controller.window?.isKeyWindow ?? false))")
+        }
     }
     
     

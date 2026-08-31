@@ -56,6 +56,13 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="9KJ-0B-A9w"/>
+                <menuItem title="Turn off True Tone" id="fW8-W0-ja9">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleTrueTone:" target="YHE-ZD-Fjn" id="fLs-gG-LhC"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="Myq-mS-cHa"/>
                 <menuItem title="Disable for current app" id="ycw-C3-JG6">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -96,13 +103,6 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="disableCustomTime:" target="YHE-ZD-Fjn" id="tHA-tu-det"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="Myq-mS-cHa"/>
-                <menuItem title="Turn off True Tone" id="fW8-W0-ja9">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleTrueTone:" target="YHE-ZD-Fjn" id="fLs-gG-LhC"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="OE0-tz-FKo"/>

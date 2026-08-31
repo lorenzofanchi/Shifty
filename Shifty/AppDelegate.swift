@@ -12,7 +12,6 @@ import LetsMove
 import MASPreferences_Shifty
 import AXSwift
 import SwiftLog
-import Sparkle
 import Intents
 
 @NSApplicationMain
@@ -43,10 +42,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
         
         let userDefaults = UserDefaults.standard
-        
-        // Initialize Sparkle. The updater lives in PrefAboutViewController;
-        // touching it here starts automatic update checks at launch.
-        _ = ShiftyUpdater
         
         
         let versionObject = Bundle.main.infoDictionary?["CFBundleShortVersionString"]

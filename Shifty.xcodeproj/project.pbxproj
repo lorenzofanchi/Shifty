@@ -10,7 +10,6 @@
 		41A3780894178C5C601604C7 /* Pods_ShiftyHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060A0A5282083B67EEC6C05D /* Pods_ShiftyHelper.framework */; };
 		43041CC5207DB9FF0076E75C /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43041CC4207DB9FF0076E75C /* CoreBrightness.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		431B7B5D2167C8740039D085 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A934002164019300AFB708 /* Security.framework */; };
-		433AD3011F2CED1F0003FBCD /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 433AD3001F2CED1F0003FBCD /* dsa_pub.pem */; };
 		433E60EC207D9995007BB55F /* BrightnessSystemClient+Shifty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E60EA207D9994007BB55F /* BrightnessSystemClient+Shifty.swift */; };
 		4350191D1F21E99F0001324F /* CustomTimeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4350191C1F21E99F0001324F /* CustomTimeWindow.swift */; };
 		4351C7811FB5737900788CC9 /* PrefGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351C7801FB5737900788CC9 /* PrefGeneralViewController.swift */; };
@@ -96,7 +95,6 @@
 		430E218222630370008E2874 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		430E218322630370008E2874 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		430E218422630370008E2874 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = Shifty/ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		433AD3001F2CED1F0003FBCD /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Shifty/dsa_pub.pem; sourceTree = "<group>"; };
 		433E60EA207D9994007BB55F /* BrightnessSystemClient+Shifty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BrightnessSystemClient+Shifty.swift"; path = "Shifty/BrightnessSystemClient+Shifty.swift"; sourceTree = "<group>"; };
 		433E60EB207D9995007BB55F /* BrightnessSystemClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrightnessSystemClient.h; path = Shifty/BrightnessSystemClient.h; sourceTree = "<group>"; };
 		4345ABA32165DB1600E2B7C7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/CustomTimeWindow.strings; sourceTree = "<group>"; };
@@ -110,14 +108,12 @@
 		434DE5C221614954002AB147 /* MASPreferences.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MASPreferences.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		434DE5C42161495F002AB147 /* MASShortcut.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MASShortcut.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		434DE5C621614969002AB147 /* PublicSuffix.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PublicSuffix.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		434DE5C821614979002AB147 /* Sparkle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sparkle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		434DE5CA21614984002AB147 /* SwiftLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4350191C1F21E99F0001324F /* CustomTimeWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTimeWindow.swift; path = Shifty/CustomTimeWindow.swift; sourceTree = "<group>"; };
 		4351C7801FB5737900788CC9 /* PrefGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrefGeneralViewController.swift; path = Shifty/PrefGeneralViewController.swift; sourceTree = "<group>"; };
 		4353E56322136937008A26C4 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		435F0383208027C600ABA2EB /* BrowserManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserManager.swift; path = Shifty/BrowserManager.swift; sourceTree = "<group>"; };
 		4368E3021EBEBA6C00D53310 /* PrefManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrefManager.swift; path = Shifty/PrefManager.swift; sourceTree = "<group>"; };
-		436A0F3C1FBE913600E77D41 /* ShiftyAppcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ShiftyAppcast.xml; sourceTree = "<group>"; };
 		437556B31FF745A6001951AB /* Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Setup.swift; path = Shifty/Setup.swift; sourceTree = "<group>"; };
 		437556B51FF746BD001951AB /* SlideSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SlideSegue.swift; path = Shifty/SlideSegue.swift; sourceTree = "<group>"; };
 		437B7178273E0889006AD485 /* SwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchView.swift; sourceTree = "<group>"; };
@@ -230,7 +226,6 @@
 				434DE5C221614954002AB147 /* MASPreferences.framework */,
 				43FFD9402161655000DD6C83 /* AXSwift.framework */,
 				434DE5C42161495F002AB147 /* MASShortcut.framework */,
-				434DE5C821614979002AB147 /* Sparkle.framework */,
 				434DE5CA21614984002AB147 /* SwiftLog.framework */,
 				D0B4370CFA537EB219F40DC7 /* Pods_Shifty.framework */,
 				060A0A5282083B67EEC6C05D /* Pods_ShiftyHelper.framework */,
@@ -300,12 +295,10 @@
 			children = (
 				4394DDA31EBE376F00F22908 /* Assets.xcassets */,
 				43FC498B1FF8936E00CD3196 /* credits.rtfd */,
-				433AD3001F2CED1F0003FBCD /* dsa_pub.pem */,
 				43D5C2441FC3A9A100AF88E0 /* Info.plist */,
 				43965AC51FC68A19001A076D /* InfoPlist.strings */,
 				43D5C2321FC2CECC00AF88E0 /* Localizable.strings */,
 				43B6126A1FFC413A00724DAE /* Localizable.stringsdict */,
-				436A0F3C1FBE913600E77D41 /* ShiftyAppcast.xml */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -484,7 +477,6 @@
 				43FC498C1FF8936F00CD3196 /* credits.rtfd in Resources */,
 				43D5C2161FC2CA1300AF88E0 /* PrefGeneralViewController.xib in Resources */,
 				43AA23CF1FFAC69A001DDF5A /* AccessibilityWindow.xib in Resources */,
-				433AD3011F2CED1F0003FBCD /* dsa_pub.pem in Resources */,
 				4394DDAA1EBE376F00F22908 /* Assets.xcassets in Resources */,
 				43B612581FFC297400724DAE /* AccessibilityView.xib in Resources */,
 				43D5C2301FC2CECC00AF88E0 /* Localizable.strings in Resources */,
@@ -530,7 +522,6 @@
 				"${BUILT_PRODUCTS_DIR}/MASPreferences+Shifty/MASPreferences_Shifty.framework",
 				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
 				"${BUILT_PRODUCTS_DIR}/PublicSuffix/PublicSuffix.framework",
-				"${PODS_ROOT}/Sparkle/Sparkle.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftLog/SwiftLog.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -540,7 +531,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASPreferences_Shifty.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PublicSuffix.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftLog.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

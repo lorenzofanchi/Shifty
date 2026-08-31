@@ -174,16 +174,6 @@
                 <stackView distribution="fillProportionally" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1HH-lX-oxw">
                     <rect key="frame" x="20" y="34" width="260" height="20"/>
                     <subviews>
-                        <button horizontalHuggingPriority="500" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dIb-5N-Omh">
-                            <rect key="frame" x="-7" y="-7" width="180" height="32"/>
-                            <buttonCell key="cell" type="push" title="Check for Updates..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LHX-7G-HlA">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="checkUpdateClicked:" target="-2" id="SIv-2y-xy3"/>
-                            </connections>
-                        </button>
                         <button horizontalHuggingPriority="500" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="E56-v4-Gla">
                             <rect key="frame" x="167" y="-7" width="100" height="32"/>
                             <buttonCell key="cell" type="push" title="Credits..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8Qq-tv-01n">
@@ -196,14 +186,11 @@
                         </button>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" secondItem="dIb-5N-Omh" secondAttribute="height" id="GIY-b7-oRR"/>
                     </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
-                        <integer value="1000"/>
                     </visibilityPriorities>
                     <customSpacing>
-                        <real value="3.4028234663852886e+38"/>
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>

@@ -6,11 +6,7 @@
 //
 
 import Cocoa
-import Sparkle
 import MASPreferences_Shifty
-
-let ShiftyUpdater = SPUStandardUpdaterController(
-    startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
 @objcMembers
 class PrefAboutViewController: NSViewController, MASPreferencesViewController {
@@ -51,10 +47,6 @@ class PrefAboutViewController: NSViewController, MASPreferencesViewController {
 
         let versionObject = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
         versionLabel.stringValue = versionObject as? String ?? ""
-    }
-
-    @IBAction func checkUpdateClicked(_ sender: NSButton) {
-        ShiftyUpdater.checkForUpdates(sender)
     }
 
     @IBAction func visitWebsiteClicked(_ sender: NSButton) {

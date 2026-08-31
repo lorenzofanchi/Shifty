@@ -72,11 +72,5 @@
 		<string>SetNightShiftStateIntent</string>
 		<string>SetTrueToneStateIntent</string>
 	</array>
-	<key>SUEnableAutomaticChecks</key>
-	<true/>
-	<key>SUFeedURL</key>
-	<string>https://shifty.natethompson.io/ShiftyAppcast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
 </dict>
 </plist>

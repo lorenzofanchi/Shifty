@@ -19,8 +19,6 @@
 /* Class = "NSTextFieldCell"; title = "📬"; ObjectID = "L2z-Z9-XAa"; */
 "L2z-Z9-XAa.title" = "📬";
 
-/* Class = "NSButtonCell"; title = "Check for Updates..."; ObjectID = "LHX-7G-HlA"; */
-"LHX-7G-HlA.title" = "Nach Updates suchen...";
 
 /* Class = "NSTextFieldCell"; title = "💸"; ObjectID = "PPr-9L-fc3"; */
 "PPr-9L-fc3.title" = "💸";

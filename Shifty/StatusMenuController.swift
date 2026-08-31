@@ -515,8 +515,12 @@ class StatusMenuController: NSObject, NSMenuDelegate {
 
     @IBAction func preferencesClicked(_ sender: NSMenuItem) {
         NSApp.activate(ignoringOtherApps: true)
-        (NSApp.delegate as? AppDelegate)?.preferenceWindowController.showWindow(sender)
 
+        guard let controller = (NSApp.delegate as? AppDelegate)?.preferenceWindowController else { return }
+        controller.showWindow(sender)
+        // As with the custom time window: an agent app's window doesn't reliably
+        // come forward from a menu action on activation alone.
+        controller.window?.orderFrontRegardless()
     }
     
     

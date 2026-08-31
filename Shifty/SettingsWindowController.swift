@@ -60,7 +60,10 @@ final class SettingsWindowController: NSWindowController {
         window.isReleasedWhenClosed = false
         // The window is created once and reused, so without this it reopens on
         // whichever Space it was last closed on rather than the current one.
-        window.collectionBehavior = [.moveToActiveSpace]
+        // .managed has to be included: collectionBehavior replaces the whole
+        // mask, and dropping it makes the window unmanaged, which puts it on
+        // every Space at once.
+        window.collectionBehavior = [.managed, .moveToActiveSpace]
 
         super.init(window: window)
     }

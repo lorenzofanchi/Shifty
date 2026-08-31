@@ -34,8 +34,9 @@ class CustomTimeWindow: NSWindowController {
         super.windowDidLoad()
 
         // Reused across openings, so it would otherwise reappear on whichever
-        // Space it was last closed on.
-        window?.collectionBehavior = [.moveToActiveSpace]
+        // Space it was last closed on. .managed must stay in the mask, or the
+        // window becomes unmanaged and shows up on every Space.
+        window?.collectionBehavior = [.managed, .moveToActiveSpace]
 
         if UserDefaults.standard.value(forKey: "customTimeWindowFrame") == nil {
             window?.center()

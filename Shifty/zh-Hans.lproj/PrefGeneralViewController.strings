@@ -37,8 +37,6 @@
 /* Class = "NSTextFieldCell"; title = "to:"; ObjectID = "aNq-H7-I2m"; */
 "aNq-H7-I2m.title" = "到:";
 
-/* Class = "NSButtonCell"; title = "Share anonymous crash data and analytics"; ObjectID = "ar0-8I-WmN"; */
-"ar0-8I-WmN.title" = "匿名共享崩溃数据和用量分析";
 
 /* Class = "NSButtonCell"; title = "Launch Shifty at login"; ObjectID = "bxC-lM-Pei"; */
 "bxC-lM-Pei.title" = "随登录自动打开 Shifty 夜览管家";
@@ -46,8 +44,6 @@
 /* Class = "NSTextFieldCell"; title = "If enabled, you can set Night Shift to automatically disable when you visit certain websites."; ObjectID = "dvg-gw-YMI"; */
 "dvg-gw-YMI.title" = "开启后，您可以设置在访问特定网站时自动停用“夜览”模式。";
 
-/* Class = "NSButtonCell"; title = "i"; ObjectID = "jjX-rt-8G1"; */
-"jjX-rt-8G1.title" = "i";
 
 /* Class = "NSMenuItem"; title = "Off"; ObjectID = "lkN-xJ-pf3"; */
 "lkN-xJ-pf3.title" = "关闭";

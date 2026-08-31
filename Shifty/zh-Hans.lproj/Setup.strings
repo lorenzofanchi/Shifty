@@ -34,8 +34,6 @@
 /* Class = "NSTextFieldCell"; title = "Vivaldi"; ObjectID = "cXQ-bL-QlF"; */
 "cXQ-bL-QlF.title" = "Vivaldi";
 
-/* Class = "NSButtonCell"; title = "Share anonymous crash data and analytics with developer"; ObjectID = "fkJ-8D-Xr2"; */
-"fkJ-8D-Xr2.title" = "匿名向开发者分享崩溃数据和诊断信息";
 
 /* Class = "NSButtonCell"; title = "Yes"; ObjectID = "hNr-Ak-j8a"; */
 "hNr-Ak-j8a.title" = "开启";
@@ -49,8 +47,6 @@
 /* Class = "NSButtonCell"; title = "Open System Preferences"; ObjectID = "lqU-rF-E5t"; */
 "lqU-rF-E5t.title" = "打开系统偏好设置";
 
-/* Class = "NSButtonCell"; title = "More info..."; ObjectID = "njq-rZ-B3n"; */
-"njq-rZ-B3n.title" = "更多信息...";
 
 /* Class = "NSButtonCell"; title = "Close"; ObjectID = "s21-gu-5OC"; */
 "s21-gu-5OC.title" = "关闭";

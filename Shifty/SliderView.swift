@@ -20,7 +20,6 @@ class SliderView: NSView {
             CBBlueLightClient.shared.blueLightReductionAmount = sender.floatValue / 100
             
             sender.superview?.enclosingMenuItem?.menu?.cancelTracking()
-            Event.sliderMoved(value: sender.floatValue).record()
             logw("Slider set to \(sender.floatValue)")
         } else {
             CBBlueLightClient.shared.previewBlueLightReductionAmount(sender.floatValue / 100)
@@ -34,7 +33,6 @@ class SliderView: NSView {
         statusMenuController.updateMenuItems()
         
         shiftSlider.isEnabled = true
-        Event.enableSlider.record()
         logw("Enable slider button clicked")
     }
 }

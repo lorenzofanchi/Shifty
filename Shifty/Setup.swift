@@ -134,17 +134,6 @@ class AccessibilityViewController: NSViewController {
 
 
 
-class FinalViewController: NSViewController {
-    @IBOutlet weak var analyticsPermissionButton: NSButton!
-    
-    @IBAction func analyticsDetailClicked(_ sender: Any) {
-        presentAsSheet(AnalyticsDetailViewController())
-    }
-    
-    override func viewWillDisappear() {
-        UserDefaults.standard.set(analyticsPermissionButton.state == .on, forKey: Keys.analyticsPermission)
-    }
-}
 
 
 

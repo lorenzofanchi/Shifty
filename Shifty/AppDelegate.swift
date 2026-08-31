@@ -8,9 +8,6 @@
 
 import Cocoa
 import ServiceManagement
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
 import LetsMove
 import MASPreferences_Shifty
 import AXSwift
@@ -47,16 +44,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let userDefaults = UserDefaults.standard
         
-        if userDefaults.bool(forKey: Keys.analyticsPermission) {
-            #if !DEBUG
-            AppCenter.start(withAppSecret: "a0d14d8b-fd4d-4512-8901-d5cfe5249548", services:[Analytics.self, Crashes.self])
-            #endif
-        } else if userDefaults.bool(forKey: Keys.hasSetupWindowShown)
-            && userDefaults.value(forKey: Keys.lastInstalledShiftyVersion) == nil {
-            // If updated from beta version
-            userDefaults.set(true, forKey: Keys.analyticsPermission)
-        }
-        
         // Initialize Sparkle
         SUUpdater.shared()
         
@@ -65,14 +52,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         userDefaults.set(versionObject as? String ?? "", forKey: Keys.lastInstalledShiftyVersion)
         
         
-        Event.appLaunched(preferredLocalization: Bundle.main.preferredLocalizations.first ?? "").record()
 
         logw("")
         logw("App launched")
         logw("macOS \(ProcessInfo().operatingSystemVersionString)")
         logw("Shifty Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
 
-        verifyOperatingSystemVersion()
         verifySupportsNightShift()
 
         let launcherAppIdentifier = "io.natethompson.ShiftyHelper"
@@ -87,7 +72,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         //Show alert if accessibility permissions have been revoked while app is not running
         if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) && !UIElement.isProcessTrusted() {
-            Event.accessibilityRevokedAlertShown.record()
             logw("Accessibility permissions revoked while app was not running")
             showAccessibilityDeniedAlert()
             UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
@@ -120,26 +104,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     //MARK: Called after application launch
     
-    func verifyOperatingSystemVersion() {
-        if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 10, minorVersion: 12, patchVersion: 4)) {
-            Event.oldMacOSVersion(version: ProcessInfo().operatingSystemVersionString).record()
-            logw("Operating system version not supported")
-            NSApplication.shared.activate(ignoringOtherApps: true)
-            
-            let alert: NSAlert = NSAlert()
-            alert.messageText = NSLocalizedString("alert.version_message", comment: "This version of macOS does not support Night Shift")
-            alert.informativeText = NSLocalizedString("alert.version_informative", comment: "Update your Mac to version 10.12.4 or higher to use Shifty.")
-            alert.alertStyle = NSAlert.Style.warning
-            alert.addButton(withTitle: NSLocalizedString("general.ok", comment: "OK"))
-            alert.runModal()
-            
-            NSApplication.shared.terminate(self)
-        }
-    }
     
     func verifySupportsNightShift() {
         if !NightShiftManager.supportsNightShift {
-            Event.unsupportedHardware.record()
             logw("System does not support Night Shift")
             NSApplication.shared.activate(ignoringOtherApps: true)
             

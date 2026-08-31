@@ -15,7 +15,6 @@ enum Keys {
     static let isDarkModeSyncEnabled = "isDarkModeSyncEnabled"
     static let isWebsiteControlEnabled = "isWebsiteControlEnabled"
     static let trueToneControl = "trueToneControl"
-    static let analyticsPermission = "fabricCrashlyticsPermission"
     static let currentAppDisableRules = "disabledApps"
     static let runningAppDisableRules = "disabledRunningApps"
     static let browserRules = "browserRules"
@@ -55,7 +54,6 @@ class PrefManager {
             Keys.isDarkModeSyncEnabled: NSNumber(value: false),
             Keys.isWebsiteControlEnabled: NSNumber(value: false),
             Keys.trueToneControl: NSNumber(value: false),
-            Keys.analyticsPermission: NSNumber(value: false),
             Keys.currentAppDisableRules: NSData(),
             Keys.runningAppDisableRules: NSData(),
             Keys.browserRules: NSData(),

@@ -160,9 +160,6 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
         logw("True Tone control set to \(sender.state.rawValue)")
     }
     
-    @IBAction func analyticsDetailClicked(_ sender: Any) {
-        self.presentAsSheet(AnalyticsDetailViewController())
-    }
     
     @IBAction func schedulePopup(_ sender: NSPopUpButton) {
         if schedulePopup.selectedItem == offMenuItem {
@@ -183,15 +180,6 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
         NightShiftManager.shared.schedule = .custom(start: fromTime, end: toTime)
     }
 
-    override func viewWillDisappear() {
-        Event.preferences(autoLaunch: autoLaunchButton.state == .on,
-                          quickToggle: quickToggleButton.state == .on,
-                          iconSwitching: iconSwitchingButton.state == .on,
-                          syncDarkMode: darkModeSyncButton.state == .on,
-                          websiteShifting: websiteShiftingButton.state == .on,
-                          trueToneControl: trueToneControlButton.state == .on,
-                          schedule: NightShiftManager.shared.schedule).record()
-    }
 }
 
 

@@ -131,7 +131,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         assignKeyboardShortcutToMenuItem(disableCustomMenuItem, userDefaultsKey: Keys.disableCustomShortcut)
         assignKeyboardShortcutToMenuItem(trueToneMenuItem, userDefaultsKey: Keys.toggleTrueToneShortcut)
 
-        Event.menuOpened.record()
     }
     
     
@@ -435,7 +434,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         } else {
             RuleManager.shared.addCurrentAppDisableRule(forApp: currentApp)
         }
-        Event.disableForCurrentApp(state: (sender as? NSMenuItem)?.state == .on).record()
     }
     
     @IBAction func disableForRunningApp(_ sender: Any) {
@@ -519,7 +517,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         NSApp.activate(ignoringOtherApps: true)
         (NSApp.delegate as? AppDelegate)?.preferenceWindowController.showWindow(sender)
 
-        Event.preferencesWindowOpened.record()
     }
     
     
@@ -528,7 +525,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         NightShiftManager.shared.respond(to: .nightShiftDisableTimerEnded)
         NightShiftManager.shared.respond(to: .nightShiftDisableRuleDeactivated)
 
-        Event.quitShifty.record()
         NotificationCenter.default.post(name: .terminateApp, object: self)
         
         NSApp.terminate(self)

@@ -22,9 +22,17 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-# x,y,w,h in points, origin top left of the main display. Find these once with
-# --measure: the menu bar strip plus the open menu, ~20pt margin for its shadow.
-REGION="900,0,707,453"
+# x,y,w,h in points, origin top left of the main display.
+#
+# This display is 2056x1329 points at 2x, so 707x453 points captures as
+# 1414x906 pixels, which is the 1413px wide image the site expects. x is flush
+# against the right edge (2056 - 707 = 1349), since the status item sits in the
+# right hand cluster and the menu drops from it, and 453pt covers the menu bar
+# plus the whole menu.
+#
+# On another display, or after rearranging the menu bar, re-find it with
+# --measure, halving the pixel figures if that display is Retina.
+REGION="1349,0,707,453"
 DELAY=8
 OUT_DIR="docs/en/images"
 LARGE_WIDTH=1413   # matches the sizes the site's responsive swap expects

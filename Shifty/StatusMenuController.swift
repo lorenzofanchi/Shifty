@@ -26,7 +26,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBOutlet weak var enableBrowserAutomationMenuItem: NSMenuItem!
     @IBOutlet weak var disableHourMenuItem: NSMenuItem!
     @IBOutlet weak var disableCustomMenuItem: NSMenuItem!
-    @IBOutlet weak var preferencesMenuItem: NSMenuItem!
+    @IBOutlet weak var settingsMenuItem: NSMenuItem!
     @IBOutlet weak var quitMenuItem: NSMenuItem!
     @IBOutlet weak var sliderView: SliderView!
     @IBOutlet weak var sunIcon: NSImageView! {
@@ -47,8 +47,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
     var nightShiftSwitchView: NSView?
     var trueToneSwitchView: NSView?
-
-    private var prefsWindowObserver: NSObjectProtocol?
     
     let calendar = NSCalendar(identifier: .gregorian)!
     
@@ -72,13 +70,9 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         
         
 
-        let prefWindow = (NSApplication.shared.delegate as? AppDelegate)?.preferenceWindowController
-        prefGeneral = prefWindow?.viewControllers.compactMap { childViewController in
-            return childViewController as? PrefGeneralViewController
-        }.first
-        prefShortcuts = prefWindow?.viewControllers.compactMap { childViewController in
-            return childViewController as? PrefShortcutsViewController
-        }.first
+        let settings = (NSApplication.shared.delegate as? AppDelegate)?.settingsWindowController
+        prefGeneral = settings?.panes.compactMap { $0 as? PrefGeneralViewController }.first
+        prefShortcuts = settings?.panes.compactMap { $0 as? PrefShortcutsViewController }.first
         
         descriptionMenuItem.isEnabled = false
         sliderMenuItem.view = sliderView
@@ -108,7 +102,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
 
         disableHourMenuItem.title = NSLocalizedString("menu.disable_hour", comment: "Disable for an hour")
         disableCustomMenuItem.title = NSLocalizedString("menu.disable_custom", comment: "Disable for custom time...")
-        preferencesMenuItem.title = NSLocalizedString("menu.preferences", comment: "Preferences...")
+        settingsMenuItem.title = NSLocalizedString("menu.preferences", comment: "Settings...")
         quitMenuItem.title = NSLocalizedString("menu.quit", comment: "Quit Shifty")
         
 
@@ -520,58 +514,28 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
     
 
-    @IBAction func preferencesClicked(_ sender: NSMenuItem) {
-        guard let controller = (NSApp.delegate as? AppDelegate)?.preferenceWindowController else { return }
-
-        // An accessory app is refused activation under macOS 14's cooperative
-        // model, so become a regular app for as long as the window is up. This
-        // has to be in place before activation is attempted, and the change
-        // needs a turn of the run loop to register, hence doing it out here.
-        NSApp.setActivationPolicy(.regular)
+    @IBAction func settingsClicked(_ sender: NSMenuItem) {
+        guard let controller = (NSApp.delegate as? AppDelegate)?.settingsWindowController else { return }
 
         // ponytail: timing workaround, and it needs to stay one. The menu is
-        // shown by a synchronous performClick, whose nested tracking run loop
-        // also services the main queue, so this action can run while the menu
-        // is still unwinding and an activation request made then is dropped.
-        // The delay clears both that and the policy change above.
+        // shown by a synchronous performClick whose nested tracking run loop
+        // also services the main queue, so ordering the window from here races
+        // the menu closing. A short delay clears it.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            NSApp.activate()
-
             controller.showWindow(sender)
+            // A non-activating panel takes key without the app activating, which
+            // macOS won't allow a menu bar app to do while another app is front.
             controller.window?.makeKeyAndOrderFront(sender)
             controller.window?.orderFrontRegardless()
 
-            self.restoreAccessoryPolicyWhenClosed(controller.window)
-
-            // isActive doesn't update within this run loop turn, so report the
-            // settled state. Diagnostic; remove once this is confirmed working.
+            // Diagnostic; remove once this is confirmed working.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 let w = controller.window
-                logw("Preferences opened -- policy: \(NSApp.activationPolicy().rawValue)"
-                    + ", app active: \(NSApp.isActive)"
-                    + ", window key: \(w?.isKeyWindow ?? false)"
+                logw("Settings opened -- window key: \(w?.isKeyWindow ?? false)"
                     + ", canBecomeKey: \(w?.canBecomeKey ?? false)"
                     + ", visible: \(w?.isVisible ?? false)"
+                    + ", app active: \(NSApp.isActive)"
                     + ", frontmost: \(NSWorkspace.shared.frontmostApplication?.localizedName ?? "none")")
-            }
-        }
-    }
-    
-
-    /// Drops back to a menu bar only app once the window goes away, so the Dock
-    /// icon doesn't outlive it.
-    private func restoreAccessoryPolicyWhenClosed(_ window: NSWindow?) {
-        guard let window = window, prefsWindowObserver == nil else { return }
-
-        prefsWindowObserver = NotificationCenter.default.addObserver(
-            forName: NSWindow.willCloseNotification,
-            object: window,
-            queue: .main)
-        { [weak self] _ in
-            NSApp.setActivationPolicy(.accessory)
-            if let observer = self?.prefsWindowObserver {
-                NotificationCenter.default.removeObserver(observer)
-                self?.prefsWindowObserver = nil
             }
         }
     }

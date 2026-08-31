@@ -6,30 +6,23 @@
 //
 
 import Cocoa
-import MASPreferences_Shifty
 
 @objcMembers
-class PrefAboutViewController: NSViewController, MASPreferencesViewController {
+class PrefAboutViewController: NSViewController, SettingsPane {
 
     override var nibName: NSNib.Name {
         get { return "PrefAboutViewController" }
     }
 
-    var viewIdentifier: String = "PrefAboutViewController"
-
-    var toolbarItemImage: NSImage? {
-        return NSImage(systemSymbolName: "info.circle", accessibilityDescription: nil)
+    var paneLabel: String {
+        return NSLocalizedString("prefs.about", comment: "About")
     }
 
-    var toolbarItemLabel: String? {
-        get {
-            view.layoutSubtreeIfNeeded()
-            return NSLocalizedString("prefs.about", comment: "About")
-        }
-    }
+    var paneSymbolName = "info.circle"
 
-    var hasResizableWidth = false
-    var hasResizableHeight = false
+
+
+
 
     @IBOutlet weak var nameLabel: NSTextField!
     @IBOutlet weak var versionLabel: NSTextField!

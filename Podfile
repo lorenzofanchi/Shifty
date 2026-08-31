@@ -7,7 +7,6 @@ target 'Shifty' do
 
   pod 'AXSwift'
   pod 'LetsMove'
-  pod 'MASPreferences+Shifty'
   pod 'MASShortcut'
   pod 'PublicSuffix'
   pod 'SwiftLog'

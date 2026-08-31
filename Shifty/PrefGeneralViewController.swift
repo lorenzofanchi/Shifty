@@ -6,32 +6,27 @@
 //
 
 import Cocoa
-import MASPreferences_Shifty
 import ServiceManagement
 import AXSwift
 import SwiftLog
 
 
 @objcMembers
-class PrefGeneralViewController: NSViewController, MASPreferencesViewController {
+class PrefGeneralViewController: NSViewController, SettingsPane {
 
     override var nibName: NSNib.Name {
         return "PrefGeneralViewController"
     }
 
-    var viewIdentifier: String = "PrefGeneralViewController"
-
-    var toolbarItemImage: NSImage? {
-        return NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
-    }
-
-    var toolbarItemLabel: String? {
-        view.layoutSubtreeIfNeeded()
+    var paneLabel: String {
         return NSLocalizedString("prefs.general", comment: "General")
     }
 
-    var hasResizableWidth = false
-    var hasResizableHeight = false
+    var paneSymbolName = "gearshape"
+
+
+
+
 
     @IBOutlet weak var autoLaunchButton: NSButton!
     @IBOutlet weak var quickToggleButton: NSButton!
@@ -53,7 +48,6 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     @IBOutlet weak var customTimeStackView: NSStackView!
 
     var appDelegate: AppDelegate!
-    var prefWindow: NSWindow!
     
     var defaultDarkModeState: Bool!
 
@@ -61,7 +55,6 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
         super.viewDidLoad()
 
         appDelegate = NSApplication.shared.delegate as? AppDelegate
-        prefWindow = appDelegate.preferenceWindowController.window
         
         NightShiftManager.shared.onNightShiftChange {
             self.updateSchedule()
@@ -191,19 +184,3 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
 
 }
 
-
-class PrefWindowController: MASPreferencesWindowController {
-    override func windowDidLoad() {
-        super.windowDidLoad()
-        window?.styleMask = [.titled, .closable]
-        
-        window?.toolbarStyle = .preference
-    }
-    
-    
-    override func keyDown(with event: NSEvent) {
-        if event.keyCode == 13 && event.modifierFlags.contains(.command) {
-            window?.close()
-        }
-    }
-}

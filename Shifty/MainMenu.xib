@@ -31,7 +31,7 @@
                 <outlet property="enableBrowserAutomationMenuItem" destination="Anz-oa-3rV" id="5yd-Qd-JzE"/>
                 <outlet property="moonIcon" destination="QFo-Gz-iR8" id="bkD-8o-fbd"/>
                 <outlet property="powerMenuItem" destination="3QK-Yf-KEO" id="Ndx-D9-T04"/>
-                <outlet property="preferencesMenuItem" destination="GJi-nB-WzR" id="0Ga-17-Xdo"/>
+                <outlet property="settingsMenuItem" destination="GJi-nB-WzR" id="0Ga-17-Xdo"/>
                 <outlet property="quitMenuItem" destination="Xyz-vQ-f3p" id="Krm-T0-yVw"/>
                 <outlet property="sliderMenuItem" destination="NRb-4W-jcc" id="mJZ-ta-RmX"/>
                 <outlet property="sliderView" destination="xRd-3s-8Ep" id="5v2-aR-QE3"/>
@@ -107,10 +107,10 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="OE0-tz-FKo"/>
-                <menuItem title="Preferences..." id="GJi-nB-WzR">
+                <menuItem title="Settings..." id="GJi-nB-WzR">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="preferencesClicked:" target="YHE-ZD-Fjn" id="TXU-TT-8Qq"/>
+                        <action selector="settingsClicked:" target="YHE-ZD-Fjn" id="TXU-TT-8Qq"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Quit Shifty" id="Xyz-vQ-f3p">

@@ -9,7 +9,6 @@
 import Cocoa
 import ServiceManagement
 import LetsMove
-import MASPreferences_Shifty
 import AXSwift
 import SwiftLog
 import Intents
@@ -22,13 +21,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     var statusItemClicked: (() -> Void)?
 
-    lazy var preferenceWindowController: PrefWindowController = {
-        return PrefWindowController(
-            viewControllers: [
+    lazy var settingsWindowController: SettingsWindowController = {
+        return SettingsWindowController(
+            panes: [
                 PrefGeneralViewController(),
                 PrefShortcutsViewController(),
                 PrefAboutViewController()],
-            title: NSLocalizedString("prefs.title", comment: "Preferences"))
+            title: NSLocalizedString("prefs.title", comment: "Settings"))
     }()
 
     var setupWindow: NSWindow!

@@ -35,7 +35,7 @@
 "menu.true_tone_unavailable" = "True Tone is not available";
 "menu.true_tone_disabled_for" = "True Tone is disabled for %@";
 
-"menu.preferences" = "Preferences...";
+"menu.preferences" = "Settings...";
 "menu.quit" = "Quit Shifty";
 
 "description.enabled" = "Enabled";
@@ -44,7 +44,7 @@
 "description.disabled" = "Disabled";
 "description.disabled_hours_minutes" = "Disabled for %02d:%02d";
 
-"prefs.title" = "Preferences";
+"prefs.title" = "Settings";
 "prefs.general" = "General";
 "prefs.shortcuts" = "Shortcuts";
 "prefs.about" = "About";

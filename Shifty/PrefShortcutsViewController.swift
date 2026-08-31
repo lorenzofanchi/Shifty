@@ -6,11 +6,10 @@
 //
 
 import Cocoa
-import MASPreferences_Shifty
 import MASShortcut
 
 @objcMembers
-class PrefShortcutsViewController: NSViewController, MASPreferencesViewController {
+class PrefShortcutsViewController: NSViewController, SettingsPane {
 
     let statusMenuController = (NSApplication.shared.delegate as? AppDelegate)?.statusMenu.delegate as? StatusMenuController
 
@@ -18,19 +17,15 @@ class PrefShortcutsViewController: NSViewController, MASPreferencesViewControlle
         return "PrefShortcutsViewController"
     }
 
-    var viewIdentifier: String = "PrefShortcutsViewController"
-
-    var toolbarItemImage: NSImage? {
-        return NSImage(systemSymbolName: "command", accessibilityDescription: nil)
-    }
-
-    var toolbarItemLabel: String? {
-        view.layoutSubtreeIfNeeded()
+    var paneLabel: String {
         return NSLocalizedString("prefs.shortcuts", comment: "Shortcuts")
     }
 
-    var hasResizableWidth = false
-    var hasResizableHeight = false
+    var paneSymbolName = "command"
+
+
+
+
     
     @IBOutlet weak var toggleTrueToneLabel: NSTextField!
     

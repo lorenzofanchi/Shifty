@@ -5,10 +5,18 @@
 #   Scripts/screenshot-menu.sh            capture, using REGION below
 #   Scripts/screenshot-menu.sh --measure  full screen grab, to find REGION
 #
+# Hides desktop icons for the duration, since they show through the translucent
+# menu, and puts them back afterwards even if you interrupt it.
+#
 # Only needs Screen Recording permission for whatever runs it. Opening a menu
 # is the one step that can't be scripted without Accessibility access, so the
 # capture is on a timer: run it, then click the Shifty icon and hold the menu
 # open until it fires.
+#
+# Not automated: the wallpaper behind the menu, and the other icons in the menu
+# bar. Setting the wallpaper needs Automation permission, and menu bar items
+# belong to the apps that own them. Both are one-time arrangements rather than
+# per-screenshot steps.
 
 set -euo pipefail
 
@@ -22,7 +30,22 @@ OUT_DIR="docs/en/images"
 LARGE_WIDTH=1413   # matches the sizes the site's responsive swap expects
 SMALL_WIDTH=1061
 
+# Restore to whatever it was, including absent, rather than assuming a default.
+if DESKTOP_WAS=$(defaults read com.apple.finder CreateDesktop 2>/dev/null); then
+    restore_desktop() { defaults write com.apple.finder CreateDesktop -bool "$DESKTOP_WAS"; killall Finder 2>/dev/null || true; }
+else
+    restore_desktop() { defaults delete com.apple.finder CreateDesktop 2>/dev/null || true; killall Finder 2>/dev/null || true; }
+fi
+
+hide_desktop() {
+    defaults write com.apple.finder CreateDesktop -bool false
+    killall Finder 2>/dev/null || true
+    sleep 1
+}
+
 if [ "${1:-}" = "--measure" ]; then
+    trap restore_desktop EXIT
+    hide_desktop
     echo "Full screen in $DELAY seconds. Open the Shifty menu now."
     screencapture -T "$DELAY" -x /tmp/shifty-measure.png
     echo "saved /tmp/shifty-measure.png ($(sips -g pixelWidth -g pixelHeight /tmp/shifty-measure.png | tail -2 | tr -d ' \n'))"
@@ -34,7 +57,9 @@ fi
 
 mkdir -p "$OUT_DIR"
 TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
+trap 'rm -rf "$TMP"; restore_desktop' EXIT
+
+hide_desktop
 
 echo "Capturing $REGION in $DELAY seconds. Click the Shifty icon and leave the menu open."
 screencapture -T "$DELAY" -x -R "$REGION" "$TMP/shot.png"

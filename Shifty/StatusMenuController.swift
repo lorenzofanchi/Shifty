@@ -528,6 +528,11 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             controller.window?.makeKeyAndOrderFront(sender)
             controller.window?.orderFrontRegardless()
 
+            // Clicking into an inactive app's window is consumed activating it,
+            // which is the dead first click. The panel is key by now, so ask for
+            // activation from a position macOS is willing to grant.
+            NSApp.activate()
+
             // Diagnostic; remove once this is confirmed working.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 let w = controller.window

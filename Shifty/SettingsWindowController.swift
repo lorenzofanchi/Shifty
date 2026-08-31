@@ -28,6 +28,15 @@ final class SettingsWindowController: NSWindowController {
     init(panes: [SettingsPane], title: String) {
         self.panes = panes
 
+        // Pin every pane to the width of the widest one, so switching tabs only
+        // ever changes the window's height. Reading .view here loads each pane's
+        // xib, which is what makes fittingSize meaningful.
+        let fittingSizes = panes.map { $0.view.fittingSize }
+        let paneWidth = fittingSizes.map { $0.width }.max() ?? 0
+        for (pane, size) in zip(panes, fittingSizes) {
+            pane.preferredContentSize = NSSize(width: paneWidth, height: size.height)
+        }
+
         let tabViewController = NSTabViewController()
         tabViewController.tabStyle = .toolbar
 

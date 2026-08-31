@@ -169,14 +169,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     //MARK: Status menu item
 
     func updateMenuBarIcon() {
-        var icon: NSImage
-        if UserDefaults.standard.bool(forKey: Keys.isIconSwitchingEnabled),
-           NightShiftManager.shared.isNightShiftEnabled == false
-        {
-            icon = #imageLiteral(resourceName: "sunOpenIcon")
-        } else {
-            icon = #imageLiteral(resourceName: "shiftyMenuIcon")
-        }
+        let icon = NightShiftManager.shared.isNightShiftEnabled
+            ? #imageLiteral(resourceName: "shiftyMenuIcon")
+            : #imageLiteral(resourceName: "sunOpenIcon")
         icon.isTemplate = true
         DispatchQueue.main.async {
             self.statusItem.button?.image = icon

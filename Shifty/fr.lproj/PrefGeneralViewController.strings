@@ -1,8 +1,6 @@
 /* Class = "NSButtonCell"; title = "True Tone control"; ObjectID = "4SC-bL-79S"; */
 "4SC-bL-79S.title" = "Contrôle True Tone";
 
-/* Class = "NSButtonCell"; title = "Set menu bar icon according to Night Shift"; ObjectID = "4io-9H-HXp"; */
-"4io-9H-HXp.title" = "Changer l'icône de la barre des menus selon Night Shift";
 
 /* Class = "NSButtonCell"; title = "Scheduled Dark Mode"; ObjectID = "5s5-Y5-5b9"; */
 "5s5-Y5-5b9.title" = "Programmer le mode foncé";

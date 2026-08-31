@@ -14,7 +14,6 @@
                 <outlet property="darkModeSyncButton" destination="Gdr-ZW-5aK" id="qW1-RZ-cQw"/>
                 <outlet property="fromLabel" destination="Pyo-AD-ZFn" id="krQ-yJ-iRG"/>
                 <outlet property="fromTimePicker" destination="uxU-uR-S3U" id="eww-uF-r1Y"/>
-                <outlet property="iconSwitchingButton" destination="Iuc-Pc-Qb3" id="eZk-Gz-74F"/>
                 <outlet property="offMenuItem" destination="lkN-xJ-pf3" id="TRT-Va-OSg"/>
                 <outlet property="quickToggleButton" destination="KNx-x5-o3g" id="SSg-7N-nbl"/>
                 <outlet property="schedulePopup" destination="vul-m7-WVn" id="ajT-uq-u4n"/>
@@ -85,20 +84,6 @@
                                 <real value="3.4028234663852886e+38"/>
                             </customSpacing>
                         </stackView>
-                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Iuc-Pc-Qb3">
-                            <rect key="frame" x="-2" y="182" width="280" height="18"/>
-                            <buttonCell key="cell" type="check" title="Set menu bar icon according to Night Shift" bezelStyle="regularSquare" imagePosition="left" inset="2" id="4io-9H-HXp">
-                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                <font key="font" metaFont="system"/>
-                                <connections>
-                                    <action selector="setIconSwitching:" target="-2" id="3zE-rm-lZi"/>
-                                    <binding destination="HAt-Ds-MVV" name="value" keyPath="values.isIconSwitchingEnabled" id="kwU-sT-znt"/>
-                                </connections>
-                            </buttonCell>
-                            <connections>
-                                <binding destination="HAt-Ds-MVV" name="value" keyPath="values.isIconSwitchingEnabled" id="bXC-4S-zX0"/>
-                            </connections>
-                        </button>
                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vhz-55-nTW">
                             <rect key="frame" x="0.0" y="130" width="309" height="46"/>
                             <subviews>
@@ -129,10 +114,8 @@
                             </constraints>
                             <visibilityPriorities>
                                 <integer value="1000"/>
-                                <integer value="1000"/>
                             </visibilityPriorities>
                             <customSpacing>
-                                <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
                             </customSpacing>
                         </stackView>

@@ -35,7 +35,6 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
 
     @IBOutlet weak var autoLaunchButton: NSButton!
     @IBOutlet weak var quickToggleButton: NSButton!
-    @IBOutlet weak var iconSwitchingButton: NSButton!
     @IBOutlet weak var darkModeSyncButton: NSButton!
     @IBOutlet weak var websiteShiftingButton: NSButton!
     @IBOutlet weak var trueToneControlButton: NSButton!
@@ -116,12 +115,6 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         appDelegate.setStatusToggle()
         logw("Quick Toggle set to \(sender.state.rawValue)")
-    }
-
-    @IBAction func setIconSwitching(_ sender: NSButtonCell) {
-        let appDelegate = NSApplication.shared.delegate as! AppDelegate
-        appDelegate.updateMenuBarIcon()
-        logw("Icon switching set to \(sender.state.rawValue)")
     }
 
     @IBAction func syncDarkMode(_ sender: NSButtonCell) {

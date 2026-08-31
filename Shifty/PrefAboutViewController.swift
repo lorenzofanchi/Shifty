@@ -75,6 +75,9 @@ class PrefAboutViewController: NSViewController, SettingsPane {
 
 
 class LinkButton: NSButton {
+    // See FirstMouseControls.swift.
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { return true }
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }

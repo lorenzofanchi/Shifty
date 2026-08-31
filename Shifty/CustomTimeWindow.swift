@@ -46,13 +46,21 @@ class CustomTimeWindow: NSWindowController {
         // Nothing left to drag the window by otherwise.
         window?.isMovableByWindowBackground = true
 
-        // New key: the window is ~28pt shorter without the title bar, so a frame
-        // saved by an older build would restore the old height and leave a gap.
         UserDefaults.standard.removeObject(forKey: "NSWindow Frame customTimeWindowFrame")
         let saveName = "customTimeWindow"
 
         if window?.setFrameUsingName(saveName) != true {
             window?.center()
+        }
+
+        // Keep the saved position but not the saved size: the dialog is sized by
+        // its content, and a frame saved before a layout change would otherwise
+        // pin it to the old dimensions.
+        if let window = window, let content = window.contentView {
+            let fitting = content.fittingSize
+            if fitting.width > 0 && fitting.height > 0 {
+                window.setContentSize(fitting)
+            }
         }
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name("NSWindowWillCloseNotification"), object: nil, queue: nil) { _ in

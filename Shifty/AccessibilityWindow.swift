@@ -69,11 +69,17 @@ class AccessibilityWindow: NSWindowController {
     }
     
     @IBAction func openSysPrefsClicked(_ sender: Any) {
-        if !isTrusted {
-            // Legacy URL, still the one that opens the Accessibility list.
-            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+        if isTrusted {
+            // The button is showing Done, so there's nothing left to open.
+            dismissWindow()
+            return
         }
-        dismissWindow()
+
+        // Legacy URL, still the one that opens the Accessibility list.
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+
+        // Deliberately left open. Access is granted in another app, and this
+        // window is what turns into Done once that happens.
     }
     
     @IBAction func notNowClicked(_ sender: Any) {
@@ -81,8 +87,8 @@ class AccessibilityWindow: NSWindowController {
     }
     
     @IBAction func helpClicked(_ sender: Any) {
+        // Also left open, for the same reason.
         NSWorkspace.shared.open(URL(string: "https://support.apple.com/guide/mac-help/allow-accessibility-apps-to-access-your-mac-mh43185")!)
-        dismissWindow()
     }
 
     private func dismissWindow() {

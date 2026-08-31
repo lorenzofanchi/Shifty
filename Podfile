@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :osx, '10.12'
+platform :osx, '11.0'
 
 target 'Shifty' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -22,4 +22,13 @@ target 'ShiftyHelper' do
 
   # Pods for ShiftyHelper
 
+end
+
+# Xcode 26 only builds 10.13+; some podspecs still declare older targets.
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '11.0'
+    end
+  end
 end

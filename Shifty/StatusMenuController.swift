@@ -528,10 +528,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             controller.window?.makeKeyAndOrderFront(sender)
             controller.window?.orderFrontRegardless()
 
-            // Clicking into an inactive app's window is consumed activating it,
-            // which is the dead first click. The panel is key by now, so ask for
-            // activation from a position macOS is willing to grant.
-            NSApp.activate()
+            self.takeFocusFromFrontmostApp()
 
             // Diagnostic; remove once this is confirmed working.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -543,6 +540,29 @@ class StatusMenuController: NSObject, NSMenuDelegate {
                     + ", frontmost: \(NSWorkspace.shared.frontmostApplication?.localizedName ?? "none")")
             }
         }
+    }
+    
+    
+
+    /// NSApp.activate() does not work for this app. Called at the status item
+    /// click, during menu tracking, after the menu closed, before and after the
+    /// window was on screen, as .accessory and as .regular, it left the log
+    /// reading "frontmost: Code" every time.
+    ///
+    /// activate(from:) is the cooperative activation API for naming the app
+    /// whose focus you are taking, rather than asking for focus in the
+    /// abstract, and it reports whether it was granted.
+    private func takeFocusFromFrontmostApp() {
+        NSApp.activate()
+
+        guard let frontmost = NSWorkspace.shared.frontmostApplication,
+              frontmost != NSRunningApplication.current else { return }
+
+        let granted = NSRunningApplication.current.activate(
+            from: frontmost, options: [.activateAllWindows])
+
+        // Diagnostic; remove once this is settled.
+        logw("took focus from \(frontmost.localizedName ?? "?"): granted \(granted)")
     }
     
     

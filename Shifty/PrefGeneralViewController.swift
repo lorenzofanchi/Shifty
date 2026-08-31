@@ -106,9 +106,17 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     //MARK: IBActions
 
     @IBAction func setAutoLaunch(_ sender: NSButtonCell) {
-        let launcherAppIdentifier = "io.natethompson.ShiftyHelper"
-        SMLoginItemSetEnabled(launcherAppIdentifier as CFString, sender.state == .on)
-        logw("Auto launch on login set to \(sender.state.rawValue)")
+        let loginItem = SMAppService.loginItem(identifier: "io.natethompson.ShiftyHelper")
+        do {
+            if sender.state == .on {
+                try loginItem.register()
+            } else {
+                try loginItem.unregister()
+            }
+            logw("Auto launch on login set to \(sender.state.rawValue)")
+        } catch {
+            logw("Error: could not set auto launch on login: \(error)")
+        }
     }
 
     @IBAction func quickToggle(_ sender: NSButtonCell) {

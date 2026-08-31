@@ -87,6 +87,10 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             x: 0, y: 0,
             width: statusMenu.size.width,
             height: nightShiftSwitchView.fittingSize.height)
+        // The menu gets wider when an app name is long, and the width captured
+        // here is from before those titles are set. The slider view does the
+        // same thing via its nib.
+        nightShiftSwitchView.autoresizingMask = [.width]
         powerMenuItem.view = nightShiftSwitchView
         
         trueToneSwitchView = SwitchView(title: "True Tone", onSwitchToggle: { isSwitchEnabled in
@@ -99,6 +103,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             x: 0, y: 0,
             width: statusMenu.size.width,
             height: trueToneSwitchView.fittingSize.height)
+        trueToneSwitchView.autoresizingMask = [.width]
 
         disableHourMenuItem.title = NSLocalizedString("menu.disable_hour", comment: "Disable for an hour")
         disableCustomMenuItem.title = NSLocalizedString("menu.disable_custom", comment: "Disable for custom time...")

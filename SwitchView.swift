@@ -7,13 +7,76 @@
 
 import Cocoa
 
+/// A switch drawn from scratch, because NSSwitch can't be used in a menu:
+/// its accent fill is only drawn while the containing window is key, and a
+/// status item's menu window never is, so it renders grey however it is
+/// configured. Its controlSize is also ignored (54x24 at regular, small and
+/// mini alike), so it can't be made menu-sized either.
+class MenuSwitch: NSControl {
+    static let size = CGSize(width: 36, height: 20)
+
+    var isOn: Bool = false {
+        didSet {
+            setAccessibilityValue(isOn)
+            needsDisplay = true
+        }
+    }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        setAccessibilityRole(.checkBox)
+        setAccessibilityValue(isOn)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override var intrinsicContentSize: NSSize {
+        return Self.size
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        let track = NSRect(origin: .zero, size: bounds.size)
+        let radius = track.height / 2
+
+        (isOn ? NSColor.controlAccentColor : NSColor.tertiaryLabelColor).setFill()
+        NSBezierPath(roundedRect: track, xRadius: radius, yRadius: radius).fill()
+
+        let inset: CGFloat = 2
+        let diameter = track.height - inset * 2
+        let knob = NSRect(
+            x: isOn ? track.maxX - inset - diameter : track.minX + inset,
+            y: track.minY + inset,
+            width: diameter,
+            height: diameter)
+
+        NSGraphicsContext.saveGraphicsState()
+        let shadow = NSShadow()
+        shadow.shadowColor = NSColor.black.withAlphaComponent(0.25)
+        shadow.shadowBlurRadius = 1.5
+        shadow.shadowOffset = NSSize(width: 0, height: -0.5)
+        shadow.set()
+        NSColor.white.setFill()
+        NSBezierPath(ovalIn: knob).fill()
+        NSGraphicsContext.restoreGraphicsState()
+    }
+
+    // ponytail: snaps rather than slides. Add a layer animation if it bothers anyone.
+    override func mouseDown(with event: NSEvent) {
+        isOn.toggle()
+        sendAction(action, to: target)
+    }
+}
+
+
 class SwitchView: NSView {
-    private var toggleSwitch = NSSwitch()
+    private var toggleSwitch = MenuSwitch()
     private var onSwitchToggle: (Bool) -> Void
     
     var switchState: Bool {
         didSet {
-            toggleSwitch.state = switchState ? .on : .off
+            toggleSwitch.isOn = switchState
         }
     }
     
@@ -31,6 +94,7 @@ class SwitchView: NSView {
         
         toggleSwitch.target = self
         toggleSwitch.action = #selector(switchToggled)
+        toggleSwitch.setAccessibilityLabel(title)
         
         let stackView = NSStackView(views: [label, toggleSwitch])
         stackView.orientation = .horizontal
@@ -39,7 +103,7 @@ class SwitchView: NSView {
         
         self.addSubviewAndConstrainToEqualSize(
             stackView,
-            withInsets: NSEdgeInsets(top: 5, left: 12, bottom: 5, right: 12))
+            withInsets: NSEdgeInsets(top: 3, left: 12, bottom: 3, right: 12))
         toggleSwitch.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
     
@@ -48,14 +112,7 @@ class SwitchView: NSView {
     }
 
     @objc func switchToggled() {
-        switch toggleSwitch.state {
-        case .on:
-            onSwitchToggle(true)
-        case .off:
-            onSwitchToggle(false)
-        default:
-            onSwitchToggle(false)
-        }
+        onSwitchToggle(toggleSwitch.isOn)
     }
 }
 

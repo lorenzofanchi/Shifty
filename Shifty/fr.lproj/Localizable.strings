@@ -53,7 +53,8 @@
 "alert.accessibility_disabled_informative" = "Les autorisations d’accessibilité doivent être données pour activer la permutation des sites web. Veuillez autoriser Shifty dans les Préférences Système, onglet « Sécurité & Confidentialité ».";
 
 
-"alert.open_preferences" = "Ouvrir les Préférences Système";
+"alert.open_preferences" = "Ouvrir les Réglages Système";
+"alert.done" = "Terminé";
 "alert.not_now" = "Plus tard";
 "alert.close" = "Fermer";
 

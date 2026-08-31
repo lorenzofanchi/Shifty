@@ -66,11 +66,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DistributedNotificationCenter.default().post(name: .terminateApp, object: Bundle.main.bundleIdentifier!)
         }
 
+        //The setup window covers accessibility itself, so don't stack an alert on top of it
+        let willShowSetupWindow = (!userDefaults.bool(forKey: Keys.hasSetupWindowShown)
+                                   && !UIElement.isProcessTrusted())
+            || ProcessInfo.processInfo.environment["show_setup"] == "true"
+
         //Show alert if accessibility permissions have been revoked while app is not running
-        if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) && !UIElement.isProcessTrusted() {
+        if !willShowSetupWindow
+            && userDefaults.bool(forKey: Keys.isWebsiteControlEnabled)
+            && !UIElement.isProcessTrusted() {
             logw("Accessibility permissions revoked while app was not running")
             showAccessibilityDeniedAlert()
-            UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
+            userDefaults.set(false, forKey: Keys.isWebsiteControlEnabled)
         }
         
         observeAccessibilityApiNotifications()
@@ -89,9 +96,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.behavior = .terminationOnRemoval
         statusItem.isVisible = true
         
-        let hasSetupWindowShown = userDefaults.bool(forKey: Keys.hasSetupWindowShown)
-
-        if (!hasSetupWindowShown && !UIElement.isProcessTrusted()) || ProcessInfo.processInfo.environment["show_setup"] == "true" {
+        if willShowSetupWindow {
             showSetupWindow()
         }
     }
@@ -122,13 +127,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let alert: NSAlert = NSAlert()
         alert.messageText = NSLocalizedString("alert.accessibility_disabled_message", comment: "Accessibility permissions for Shifty have been disabled")
-        alert.informativeText = NSLocalizedString("alert.accessibility_disabled_informative", comment: "Accessibility must be allowed to enable website shifting. Grant access to Shifty in Security & Privacy preferences, located in System Preferences.")
+        alert.informativeText = NSLocalizedString("alert.accessibility_disabled_informative", comment: "Accessibility must be allowed to enable website shifting. Grant access to Shifty in Privacy & Security settings, located in System Settings.")
         alert.alertStyle = NSAlert.Style.warning
-        alert.addButton(withTitle: NSLocalizedString("alert.open_preferences", comment: "Open System Preferences"))
+        alert.addButton(withTitle: NSLocalizedString("alert.open_preferences", comment: "Open System Settings"))
         alert.addButton(withTitle: NSLocalizedString("alert.not_now", comment: "Not now"))
         if alert.runModal() == .alertFirstButtonReturn {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-            logw("Open System Preferences button clicked")
+            logw("Open System Settings button clicked")
         } else {
             logw("Not now button clicked")
         }

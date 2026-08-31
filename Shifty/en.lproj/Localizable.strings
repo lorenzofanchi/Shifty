@@ -52,10 +52,11 @@
 "alert.hardware_informative" = "A newer Mac is required to use Shifty.";
 
 "alert.accessibility_disabled_message" = "Accessibility permissions for Shifty have been disabled";
-"alert.accessibility_disabled_informative" = "Accessibility control must be allowed to enable Website Shifting. Grant access to Shifty in Security & Privacy preferences, located in System Preferences.";
+"alert.accessibility_disabled_informative" = "Accessibility control must be allowed to enable Website Shifting. Grant access to Shifty in Privacy & Security settings, located in System Settings.";
 
 
-"alert.open_preferences" = "Open System Preferences";
+"alert.open_preferences" = "Open System Settings";
+"alert.done" = "Done";
 "alert.not_now" = "Not now";
 "alert.close" = "Close";
 

@@ -54,7 +54,7 @@ class SetupView: NSView {
     
     @IBAction func openSystemPrefsClicked(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-        logw("Open System Preferences button clicked")
+        logw("Open System Settings button clicked")
     }
     
     @IBAction func closeButtonClicked(_ sender: Any) {

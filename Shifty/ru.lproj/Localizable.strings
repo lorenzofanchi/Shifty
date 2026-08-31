@@ -54,6 +54,7 @@
 
 
 "alert.open_preferences" = "Откройте Системные настройки";
+"alert.done" = "Готово";
 "alert.not_now" = "Не сейчас";
 "alert.close" = "Закрыть";
 

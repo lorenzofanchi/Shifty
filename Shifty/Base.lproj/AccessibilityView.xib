@@ -28,7 +28,7 @@
                     <rect key="frame" x="-2" y="269" width="414" height="51"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="R57-iU-qAv">
                         <font key="font" metaFont="system"/>
-                        <string key="title">Website Shifting requires accessibility permissions. Grant access to Shifty in Security &amp; Privacy preferences, located in System Preferences.</string>
+                        <string key="title">Website Shifting requires accessibility permissions. Grant access to Shifty in Privacy &amp; Security settings, located in System Settings.</string>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>

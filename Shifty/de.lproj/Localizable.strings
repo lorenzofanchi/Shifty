@@ -54,6 +54,7 @@
 
 
 "alert.open_preferences" = "Systemeinstellungen öffnen";
+"alert.done" = "Fertig";
 "alert.not_now" = "Nicht jetzt";
 "alert.close" = "Schließen";
 

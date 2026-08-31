@@ -521,18 +521,30 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBAction func preferencesClicked(_ sender: NSMenuItem) {
         guard let controller = (NSApp.delegate as? AppDelegate)?.preferenceWindowController else { return }
 
-        // The menu is still tracking when this action fires, and an activation
-        // request made during menu tracking is dropped, which left the window
-        // on screen but needing a click. Wait for the menu to finish closing.
-        DispatchQueue.main.async {
-            NSApp.activate(ignoringOtherApps: true)
+        // ponytail: timing workaround, and it needs to stay one. The menu is
+        // shown by a synchronous performClick, whose nested tracking run loop
+        // also services the main queue, so this action can run while the menu
+        // is still unwinding and an activation request made then is dropped.
+        // A plain async lands on either side of that and activated only
+        // sometimes. A short delay clears tracking whichever order AppKit
+        // chooses to send the action in.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             controller.showWindow(sender)
+
+            // Front even if activation is refused, so it never opens behind the
+            // app that had focus.
+            controller.window?.orderFrontRegardless()
+
+            NSApp.activate()
             controller.window?.makeKeyAndOrderFront(sender)
 
-            logw("Preferences opened (app active: \(NSApp.isActive), window key: \(controller.window?.isKeyWindow ?? false))")
+            // isActive doesn't update within this run loop turn, so report the
+            // settled state. Diagnostic; remove once this is confirmed working.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                logw("Preferences opened (app active: \(NSApp.isActive), window key: \(controller.window?.isKeyWindow ?? false))")
+            }
         }
     }
-    
     
 
     @IBAction func quitClicked(_ sender: NSMenuItem) {

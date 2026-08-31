@@ -49,18 +49,17 @@ class CustomTimeWindow: NSWindowController {
         UserDefaults.standard.removeObject(forKey: "NSWindow Frame customTimeWindowFrame")
         let saveName = "customTimeWindow"
 
+        // Restore the saved position but never the saved size. The size the nib
+        // produces is the one the constraints can satisfy; a size saved by an
+        // older layout can't, and forcing one breaks the layout outright.
+        let nibSize = window?.frame.size
+
         if window?.setFrameUsingName(saveName) != true {
             window?.center()
         }
 
-        // Keep the saved position but not the saved size: the dialog is sized by
-        // its content, and a frame saved before a layout change would otherwise
-        // pin it to the old dimensions.
-        if let window = window, let content = window.contentView {
-            let fitting = content.fittingSize
-            if fitting.width > 0 && fitting.height > 0 {
-                window.setContentSize(fitting)
-            }
+        if let window = window, let nibSize = nibSize {
+            window.setFrame(NSRect(origin: window.frame.origin, size: nibSize), display: false)
         }
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name("NSWindowWillCloseNotification"), object: nil, queue: nil) { _ in

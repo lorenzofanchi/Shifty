@@ -21,15 +21,15 @@ Shifty was made to expand the capabilities of the built in Night Shift feature i
     </ul>
   </div>
   <div class="col-sm-6">
-    <img id="prefs-general" src="images/prefs-general-screenshot.png">
+    <img id="prefs-general" src="images/settings-general-screenshot.png" style="box-shadow: none; border-radius: 0;">
   </div>
 </div>
 
 ##### System requirements:
-* macOS 10.12.4 or later
+* macOS 14 or later
 * System meets the [requirements for Night Shift](https://support.apple.com/HT207513#requirements)
-* Website Shifting supports Safari, Chrome, Opera, and Vivaldi
-* True Tone features require a [supported Mac](https://support.apple.com/HT208909) and macOS 10.14 or later
+* Website Shifting supports Safari, Chrome, Chromium, Edge, Brave, Opera, and Vivaldi
+* True Tone features require a [supported Mac](https://support.apple.com/HT208909)
 
 <br>
 If you love Shifty, consider [donating]({{ site.donate_link_usd }}) to help me make it better.

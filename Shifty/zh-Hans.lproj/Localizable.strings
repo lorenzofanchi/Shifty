@@ -13,6 +13,8 @@
 "menu.toggle_off" = "关闭“夜览”模式";
 "menu.disable_for" = "为%@关闭“夜览”模式";
 "menu.disabled_for" = "已为%@关闭“夜览”模式";
+"menu.disable_while_using" = "为%@关闭“夜览”模式";
+"menu.disabled_while_using" = "已为%@关闭“夜览”模式";
 "menu.enable_for" = "为%@开启“夜览”模式";
 "menu.enabled_for" = "已为%@开启“夜览”模式";
 

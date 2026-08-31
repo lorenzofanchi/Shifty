@@ -13,6 +13,8 @@
 "menu.toggle_off" = "Désactiver Night Shift";
 "menu.disable_for" = "Désactiver pendant %@";
 "menu.disabled_for" = "Désactivé pendant %@";
+"menu.disable_while_using" = "Désactiver pendant %@";
+"menu.disabled_while_using" = "Désactivé pendant %@";
 "menu.enable_for" = "Activer pendant %@";
 "menu.enabled_for" = "Activé pendant %@";
 

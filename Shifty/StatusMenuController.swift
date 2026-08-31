@@ -191,10 +191,10 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         //MARK: disable for app
         if RuleManager.shared.isDisabledForCurrentApp {
             disableCurrentAppMenuItem.state = .on
-            disableCurrentAppMenuItem.title = String(format: NSLocalizedString("menu.disabled_for", comment: "Disabled for %@"), currentAppName)
+            disableCurrentAppMenuItem.title = String(format: NSLocalizedString("menu.disabled_while_using", comment: "Disabled while using %@"), currentAppName)
         } else {
             disableCurrentAppMenuItem.state = .off
-            disableCurrentAppMenuItem.title = String(format: NSLocalizedString("menu.disable_for", comment: "Disable for %@"), currentAppName)
+            disableCurrentAppMenuItem.title = String(format: NSLocalizedString("menu.disable_while_using", comment: "Disable while using %@"), currentAppName)
         }
         
         if let currentApp = RuleManager.shared.currentApp,

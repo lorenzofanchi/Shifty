@@ -13,6 +13,8 @@
 "menu.toggle_off" = "Выключить Night Shift";
 "menu.disable_for" = "Выключить для %@";
 "menu.disabled_for" = "Выключено для %@";
+"menu.disable_while_using" = "Выключить для %@";
+"menu.disabled_while_using" = "Выключено для %@";
 "menu.enable_for" = "Включить для %@";
 "menu.enabled_for" = "Включено для %@";
 

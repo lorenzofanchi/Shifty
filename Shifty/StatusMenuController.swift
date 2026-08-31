@@ -523,20 +523,18 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBAction func preferencesClicked(_ sender: NSMenuItem) {
         guard let controller = (NSApp.delegate as? AppDelegate)?.preferenceWindowController else { return }
 
+        // An accessory app is refused activation under macOS 14's cooperative
+        // model, so become a regular app for as long as the window is up. This
+        // has to be in place before activation is attempted, and the change
+        // needs a turn of the run loop to register, hence doing it out here.
+        NSApp.setActivationPolicy(.regular)
+
         // ponytail: timing workaround, and it needs to stay one. The menu is
         // shown by a synchronous performClick, whose nested tracking run loop
         // also services the main queue, so this action can run while the menu
         // is still unwinding and an activation request made then is dropped.
-        // A plain async lands on either side of that and activated only
-        // sometimes. A short delay clears tracking whichever order AppKit
-        // chooses to send the action in.
+        // The delay clears both that and the policy change above.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            // macOS 14's cooperative activation refuses to hand focus to an
-            // accessory app on request: with .accessory set, activate() left
-            // "app active: false" in the log every time another app held focus.
-            // Becoming a regular app for as long as a window is up is the only
-            // thing that reliably works. Costs a Dock icon meanwhile.
-            NSApp.setActivationPolicy(.regular)
             NSApp.activate()
 
             controller.showWindow(sender)
@@ -548,7 +546,13 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             // isActive doesn't update within this run loop turn, so report the
             // settled state. Diagnostic; remove once this is confirmed working.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                logw("Preferences opened (app active: \(NSApp.isActive), window key: \(controller.window?.isKeyWindow ?? false))")
+                let w = controller.window
+                logw("Preferences opened -- policy: \(NSApp.activationPolicy().rawValue)"
+                    + ", app active: \(NSApp.isActive)"
+                    + ", window key: \(w?.isKeyWindow ?? false)"
+                    + ", canBecomeKey: \(w?.canBecomeKey ?? false)"
+                    + ", visible: \(w?.isVisible ?? false)"
+                    + ", frontmost: \(NSWorkspace.shared.frontmostApplication?.localizedName ?? "none")")
             }
         }
     }

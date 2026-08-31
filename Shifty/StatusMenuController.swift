@@ -523,22 +523,10 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         // the menu closing. A short delay clears it.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             controller.showWindow(sender)
-            // A non-activating panel takes key without the app activating, which
-            // macOS won't allow a menu bar app to do while another app is front.
             controller.window?.makeKeyAndOrderFront(sender)
             controller.window?.orderFrontRegardless()
 
             self.takeFocusFromFrontmostApp()
-
-            // Diagnostic; remove once this is confirmed working.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let w = controller.window
-                logw("Settings opened -- window key: \(w?.isKeyWindow ?? false)"
-                    + ", canBecomeKey: \(w?.canBecomeKey ?? false)"
-                    + ", visible: \(w?.isVisible ?? false)"
-                    + ", app active: \(NSApp.isActive)"
-                    + ", frontmost: \(NSWorkspace.shared.frontmostApplication?.localizedName ?? "none")")
-            }
         }
     }
     
@@ -561,8 +549,9 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         let granted = NSRunningApplication.current.activate(
             from: frontmost, options: [.activateAllWindows])
 
-        // Diagnostic; remove once this is settled.
-        logw("took focus from \(frontmost.localizedName ?? "?"): granted \(granted)")
+        if !granted {
+            logw("Error: could not take focus from \(frontmost.localizedName ?? "unknown app")")
+        }
     }
     
     

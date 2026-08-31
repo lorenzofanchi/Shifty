@@ -187,7 +187,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
         guard let event = NSApp.currentEvent else { return }
-        
+
+        // Clicking our own status item is the one moment macOS reliably grants a
+        // menu bar app activation. Asking later, when a window is being opened
+        // from the menu, is refused: the window comes up unfocused and its first
+        // click is spent bringing us forward. Costs taking focus from whatever
+        // app was in front whenever the menu is opened.
+        NSApp.activate()
+
         if UserDefaults.standard.bool(forKey: Keys.isStatusToggleEnabled) {
             if event.type == .rightMouseDown
                 || event.type == .rightMouseUp

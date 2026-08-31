@@ -15,11 +15,12 @@ protocol SettingsPane: NSViewController {
 /// Replaces MASPreferences, an unmaintained pod carried for three panes.
 /// NSTabViewController in .toolbar style is the stock equivalent.
 ///
-/// Owning the window also lets it be a non-activating panel, which can take
-/// keyboard focus while the app stays inactive. That matters because macOS
-/// refuses to activate a menu bar app while another app is frontmost: with the
-/// old window, opening settings logged "app active: false, frontmost: Code"
-/// however it was ordered, activated, or policy-flipped.
+/// This was briefly an NSPanel with .nonactivatingPanel, to sidestep macOS
+/// refusing to activate a menu bar app while another app is frontmost. It got
+/// the window on screen and key, but left every first click being spent
+/// bringing the app forward, which acceptsFirstMouse didn't cure either. The
+/// app is now activated when the status item is clicked instead, so an ordinary
+/// window is all that's needed here.
 final class SettingsWindowController: NSWindowController {
 
     /// The panes, in the order given.
@@ -48,20 +49,17 @@ final class SettingsWindowController: NSWindowController {
             tabViewController.addTabViewItem(item)
         }
 
-        let panel = NSPanel(
+        let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
-            styleMask: [.titled, .closable, .nonactivatingPanel],
+            styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false)
-        panel.contentViewController = tabViewController
-        panel.title = title
-        panel.toolbarStyle = .preference
-        // Panels hide themselves on deactivate by default, which would make
-        // settings vanish the moment focus went elsewhere.
-        panel.hidesOnDeactivate = false
-        panel.isReleasedWhenClosed = false
+        window.contentViewController = tabViewController
+        window.title = title
+        window.toolbarStyle = .preference
+        window.isReleasedWhenClosed = false
 
-        super.init(window: panel)
+        super.init(window: window)
     }
 
     required init?(coder: NSCoder) {

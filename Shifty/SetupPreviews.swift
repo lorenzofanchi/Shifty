@@ -244,7 +244,8 @@ class BrowserStrip: PreviewView {
             icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
             icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
 
-            let label = PreviewView.menuLabel(browser.name, dim: true)
+            // Full labelColor: these are the content of the strip, not a caption.
+            let label = PreviewView.menuLabel(browser.name)
             label.font = .systemFont(ofSize: NSFont.systemFontSize)
 
             let stack = NSStackView(views: [icon, label])

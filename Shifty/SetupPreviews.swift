@@ -216,7 +216,7 @@ class WebsiteRulesPreview: PreviewView {
 }
 
 
-/// The supported browsers, two rows of three. Each icon is taken from the
+/// The supported browsers, one row of icons. Each is taken from the
 /// installed copy where there is one, so it's whatever that browser looks like
 /// today, and falls back to the bundled asset otherwise.
 class BrowserStrip: PreviewView {
@@ -233,7 +233,7 @@ class BrowserStrip: PreviewView {
         super.viewDidMoveToWindow()
         guard subviews.isEmpty else { return }
 
-        func cell(_ browser: (name: String, bundleID: String, asset: String)) -> NSView {
+        let icons = Self.browsers.map { browser -> NSImageView in
             let icon = NSImageView()
             if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: browser.bundleID) {
                 icon.image = NSWorkspace.shared.icon(forFile: url.path)
@@ -241,49 +241,28 @@ class BrowserStrip: PreviewView {
                 icon.image = NSImage(named: browser.asset)
             }
             icon.imageScaling = .scaleProportionallyDown
-            icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
-
-            // Full labelColor: these are the content of the strip, not a caption.
-            let label = PreviewView.menuLabel(browser.name)
-            label.font = .systemFont(ofSize: NSFont.systemFontSize)
-
-            let stack = NSStackView(views: [icon, label])
-            stack.orientation = .horizontal
-            stack.alignment = .centerY
-            stack.spacing = 8
-            stack.widthAnchor.constraint(equalToConstant: 110).isActive = true
-            return stack
+            icon.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            // The sentence above names every browser, so these carry no
+            // information a screen reader needs to announce again.
+            icon.setAccessibilityElement(false)
+            return icon
         }
 
-        let rows = Self.browsers.chunked(3).map { group -> NSStackView in
-            let row = NSStackView(views: group.map(cell))
-            row.orientation = .horizontal
-            row.alignment = .centerY
-            row.spacing = 10
-            row.distribution = .fillEqually
-            return row
-        }
-
-        let grid = NSStackView(views: rows)
-        grid.orientation = .vertical
-        grid.alignment = .centerX
-        grid.spacing = 14
-        grid.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(grid)
+        let row = NSStackView(views: icons)
+        row.orientation = .horizontal
+        row.alignment = .centerY
+        row.spacing = 16
+        row.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(row)
 
         NSLayoutConstraint.activate([
-            grid.topAnchor.constraint(equalTo: topAnchor),
-            grid.bottomAnchor.constraint(equalTo: bottomAnchor),
-            grid.leadingAnchor.constraint(equalTo: leadingAnchor),
-            grid.trailingAnchor.constraint(equalTo: trailingAnchor),
+            row.topAnchor.constraint(equalTo: topAnchor),
+            row.bottomAnchor.constraint(equalTo: bottomAnchor),
+            row.leadingAnchor.constraint(equalTo: leadingAnchor),
+            row.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
 }
 
 
-private extension Array {
-    func chunked(_ size: Int) -> [[Element]] {
-        stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
-    }
-}

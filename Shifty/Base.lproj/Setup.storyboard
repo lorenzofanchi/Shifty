@@ -205,7 +205,7 @@ DQ
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fxw-jc-XI4">
                                 <rect key="frame" x="20" y="150" width="435" height="32"/>
-                                <textFieldCell key="cell" lineBreakMode="wordWrapping" alignment="center" title="Works with Safari, Chrome, Chromium, Edge, Brave, Opera and Vivaldi." id="s9E-Fw-supports">
+                                <textFieldCell key="cell" lineBreakMode="wordWrapping" alignment="center" title="Works with Safari, Chrome, Brave, Edge, Opera and Vivaldi." id="s9E-Fw-supports">
                                     <font key="font" metaFont="system" size="14"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

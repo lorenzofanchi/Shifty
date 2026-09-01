@@ -220,11 +220,12 @@ class WebsiteRulesPreview: PreviewView {
 /// installed copy where there is one, so it's whatever that browser looks like
 /// today, and falls back to the bundled asset otherwise.
 class BrowserStrip: PreviewView {
+    // Same order as the sentence above them.
     private static let browsers: [(name: String, bundleID: String, asset: String)] = [
         ("Safari",  "com.apple.Safari",             "safariIcon"),
         ("Chrome",  "com.google.Chrome",            "chromeIcon"),
-        ("Edge",    "com.microsoft.edgemac",        "edgeIcon"),
         ("Brave",   "com.brave.Browser",            "braveIcon"),
+        ("Edge",    "com.microsoft.edgemac",        "edgeIcon"),
         ("Opera",   "com.operasoftware.Opera",      "operaIcon"),
         ("Vivaldi", "com.vivaldi.Vivaldi",          "vivaldiIcon"),
     ]
@@ -241,8 +242,8 @@ class BrowserStrip: PreviewView {
                 icon.image = NSImage(named: browser.asset)
             }
             icon.imageScaling = .scaleProportionallyDown
-            icon.widthAnchor.constraint(equalToConstant: 36).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 44).isActive = true
             // The sentence above names every browser, so these carry no
             // information a screen reader needs to announce again.
             icon.setAccessibilityElement(false)
@@ -252,7 +253,7 @@ class BrowserStrip: PreviewView {
         let row = NSStackView(views: icons)
         row.orientation = .horizontal
         row.alignment = .centerY
-        row.spacing = 16
+        row.spacing = 18
         row.translatesAutoresizingMaskIntoConstraints = false
         addSubview(row)
 

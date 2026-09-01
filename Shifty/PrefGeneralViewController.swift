@@ -140,6 +140,31 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
         logw("Dark mode sync preference set to \(sender.state.rawValue)")
     }
 
+    /// The "Needs access" chip beside the Website Shifting checkbox. Added to the
+    /// pane rather than into the checkbox's stack view, so the row it sits on
+    /// doesn't have to be rebuilt.
+    private lazy var accessibilityChip: NSView = {
+        let label = NSTextField(labelWithString:
+            NSLocalizedString("prefs.needs_access", comment: "Needs access"))
+        label.font = .systemFont(ofSize: 10, weight: .semibold)
+        label.textColor = .secondaryLabelColor
+
+        let chip = NSView()
+        chip.wantsLayer = true
+        chip.layer?.cornerRadius = 4
+        chip.layer?.backgroundColor = NSColor.secondaryLabelColor.withAlphaComponent(0.14).cgColor
+        chip.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+        chip.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: chip.leadingAnchor, constant: 7),
+            label.trailingAnchor.constraint(equalTo: chip.trailingAnchor, constant: -7),
+            label.topAnchor.constraint(equalTo: chip.topAnchor, constant: 2),
+            label.bottomAnchor.constraint(equalTo: chip.bottomAnchor, constant: -2),
+        ])
+        return chip
+    }()
+
     /// Shown while Website Shifting is on but Accessibility hasn't been granted.
     /// macOS only ever shows its own prompt once, so after a denial this row is
     /// the only thing left saying the feature isn't actually working.
@@ -162,7 +187,11 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
         let stack = NSStackView(views: [label, button])
         stack.orientation = .vertical
         stack.alignment = .leading
-        stack.spacing = 6
+        stack.spacing = 4
+        // Lines the notice up with the explanatory text above it rather than
+        // with the checkbox. edgeInsets, because the enclosing stack view owns
+        // the leading constraint and a second one would fight it.
+        stack.edgeInsets = NSEdgeInsets(top: 2, left: 20, bottom: 0, right: 0)
         return stack
     }()
 
@@ -174,8 +203,15 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
 
         if needed, accessibilityNotice.superview == nil {
             column.addView(accessibilityNotice, in: .bottom)
+
+            view.addSubview(accessibilityChip)
+            NSLayoutConstraint.activate([
+                accessibilityChip.centerYAnchor.constraint(equalTo: websiteShiftingButton.centerYAnchor),
+                accessibilityChip.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            ])
         } else if !needed, accessibilityNotice.superview != nil {
             column.removeView(accessibilityNotice)
+            accessibilityChip.removeFromSuperview()
         }
     }
 

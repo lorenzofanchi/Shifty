@@ -132,16 +132,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func observeAccessibilityApiNotifications() {
-        DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("com.apple.accessibility.api"), object: nil, queue: nil) { _ in
-            logw("Accessibility permissions changed: \(UIElement.isProcessTrusted(withPrompt: false))")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                if UIElement.isProcessTrusted(withPrompt: false) {
-                    UserDefaults.standard.set(true, forKey: Keys.isWebsiteControlEnabled)
-                } else {
-                    UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
-                }
-            })
+        // Only ever sync upward. This notification fires for every app's
+        // accessibility change, and can arrive before the system has updated
+        // the answer for us, so reading false here is not evidence that the
+        // person turned anything off: writing it back was what unticked the
+        // checkbox a moment after access had in fact been granted.
+        //
+        // Access being revoked no longer switches the feature off either. The
+        // preference records what the person asked for; whether it can work is
+        // what the notice in Settings and the row in the menu are for.
+        let syncIfTrusted = {
+            if UIElement.isProcessTrusted() {
+                UserDefaults.standard.set(true, forKey: Keys.isWebsiteControlEnabled)
+            }
         }
+
+        DistributedNotificationCenter.default().addObserver(
+            forName: NSNotification.Name("com.apple.accessibility.api"),
+            object: nil,
+            queue: nil)
+        { _ in
+            logw("Accessibility permissions changed: \(UIElement.isProcessTrusted())")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: syncIfTrusted)
+        }
+
+        // Returning from System Settings is the dependable second chance, and
+        // catches the case where the notification lost the race entirely.
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main)
+        { _ in syncIfTrusted() }
     }
     
     

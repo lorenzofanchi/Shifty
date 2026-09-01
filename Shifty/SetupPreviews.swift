@@ -48,7 +48,7 @@ class PreviewView: NSView {
 /// The menu bar, with Shifty's real template icon in it. Page 1 says "look up
 /// there", so it shows the bar and what drops out of it when you click.
 class MenuBarPreview: PreviewView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 380, height: 150) }
+    override var intrinsicContentSize: NSSize { NSSize(width: 435, height: 150) }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
@@ -125,10 +125,12 @@ class MenuBarPreview: PreviewView {
             cluster.trailingAnchor.constraint(equalTo: bar.trailingAnchor, constant: -12),
             cluster.centerYAnchor.constraint(equalTo: bar.centerYAnchor),
 
-            // hanging directly below the icon, as a status item menu does
+            // A status item menu hangs from its icon, but shifts left to stay on
+            // screen. Its right edge landing near the edge is what that looks
+            // like, and it keeps the panel inside this view's bounds.
             panel.topAnchor.constraint(equalTo: bar.bottomAnchor, constant: 5),
-            panel.leadingAnchor.constraint(equalTo: icon.leadingAnchor, constant: -12),
-            panel.widthAnchor.constraint(equalToConstant: 190),
+            panel.trailingAnchor.constraint(equalTo: bar.trailingAnchor),
+            panel.widthAnchor.constraint(equalToConstant: 200),
 
             rows.topAnchor.constraint(equalTo: panel.topAnchor),
             rows.leadingAnchor.constraint(equalTo: panel.leadingAnchor),
@@ -142,7 +144,7 @@ class MenuBarPreview: PreviewView {
 /// Two of the menu's website rows, with the subdomain indented under the domain
 /// exactly as the real menu indents it.
 class WebsiteRulesPreview: PreviewView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 330, height: 92) }
+    override var intrinsicContentSize: NSSize { NSSize(width: 360, height: 178) }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
@@ -170,14 +172,18 @@ class WebsiteRulesPreview: PreviewView {
         ])
         rows.orientation = .vertical
         rows.alignment = .leading
-        rows.spacing = 6
-        rows.edgeInsets = NSEdgeInsets(top: 10, left: 10, bottom: 12, right: 14)
+        rows.spacing = 8
+        rows.edgeInsets = NSEdgeInsets(top: 14, left: 12, bottom: 16, right: 20)
 
         let panel = PreviewView.menuPanel()
         panel.addSubview(rows)
         rows.translatesAutoresizingMaskIntoConstraints = false
         panel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(panel)
+
+        let browsers = BrowserStrip()
+        browsers.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(browsers)
 
         NSLayoutConstraint.activate([
             panel.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -186,6 +192,81 @@ class WebsiteRulesPreview: PreviewView {
             rows.leadingAnchor.constraint(equalTo: panel.leadingAnchor),
             rows.trailingAnchor.constraint(equalTo: panel.trailingAnchor),
             rows.bottomAnchor.constraint(equalTo: panel.bottomAnchor),
+
+            browsers.topAnchor.constraint(equalTo: panel.bottomAnchor, constant: 26),
+            browsers.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
+    }
+}
+
+
+/// The supported browsers, two rows of three. Each icon is taken from the
+/// installed copy where there is one, so it's whatever that browser looks like
+/// today, and falls back to the bundled asset otherwise.
+class BrowserStrip: PreviewView {
+    private static let browsers: [(name: String, bundleID: String, asset: String)] = [
+        ("Safari",  "com.apple.Safari",             "safariIcon"),
+        ("Chrome",  "com.google.Chrome",            "chromeIcon"),
+        ("Edge",    "com.microsoft.edgemac",        "edgeIcon"),
+        ("Brave",   "com.brave.Browser",            "braveIcon"),
+        ("Opera",   "com.operasoftware.Opera",      "operaIcon"),
+        ("Vivaldi", "com.vivaldi.Vivaldi",          "vivaldiIcon"),
+    ]
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        guard subviews.isEmpty else { return }
+
+        func cell(_ browser: (name: String, bundleID: String, asset: String)) -> NSView {
+            let icon = NSImageView()
+            if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: browser.bundleID) {
+                icon.image = NSWorkspace.shared.icon(forFile: url.path)
+            } else {
+                icon.image = NSImage(named: browser.asset)
+            }
+            icon.imageScaling = .scaleProportionallyDown
+            icon.widthAnchor.constraint(equalToConstant: 18).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 18).isActive = true
+
+            let label = PreviewView.menuLabel(browser.name, dim: true)
+            label.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+
+            let stack = NSStackView(views: [icon, label])
+            stack.orientation = .horizontal
+            stack.alignment = .centerY
+            stack.spacing = 6
+            stack.widthAnchor.constraint(equalToConstant: 96).isActive = true
+            return stack
+        }
+
+        let rows = Self.browsers.chunked(3).map { group -> NSStackView in
+            let row = NSStackView(views: group.map(cell))
+            row.orientation = .horizontal
+            row.alignment = .centerY
+            row.spacing = 10
+            row.distribution = .fillEqually
+            return row
+        }
+
+        let grid = NSStackView(views: rows)
+        grid.orientation = .vertical
+        grid.alignment = .centerX
+        grid.spacing = 10
+        grid.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(grid)
+
+        NSLayoutConstraint.activate([
+            grid.topAnchor.constraint(equalTo: topAnchor),
+            grid.bottomAnchor.constraint(equalTo: bottomAnchor),
+            grid.leadingAnchor.constraint(equalTo: leadingAnchor),
+            grid.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+}
+
+
+private extension Array {
+    func chunked(_ size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
     }
 }

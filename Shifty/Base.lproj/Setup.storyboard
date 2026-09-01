@@ -74,7 +74,7 @@
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ldh-Qb-ijW">
                                 <rect key="frame" x="18" y="70" width="315" height="16"/>
-                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="There's one thing to set up. Click Next." id="J4B-E9-KIZ">
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="There's one thing to set up. Click Next." id="J4B-E9-KIZ">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -108,6 +108,7 @@ DQ
                             <constraint firstItem="ldh-Qb-ijW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jn8-mZ-J20" secondAttribute="bottom" constant="20" id="D51-j9-054"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mxU-q0-bpJ" secondAttribute="trailing" constant="20" id="Dtm-ry-O5F"/>
                             <constraint firstItem="ldh-Qb-ijW" firstAttribute="leading" secondItem="vpL-89-GYZ" secondAttribute="leading" constant="20" id="E3P-HT-i7l"/>
+                        <constraint firstAttribute="trailing" secondItem="ldh-Qb-ijW" secondAttribute="trailing" constant="20" id="E3P-c2-trail"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="6jJ-c5-oIY" secondAttribute="trailing" constant="20" id="FhB-5c-D9c"/>
                             <constraint firstItem="15C-Gh-udT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vpL-89-GYZ" secondAttribute="leading" constant="20" id="Gxx-pd-csi"/>
                             <constraint firstAttribute="trailing" secondItem="15C-Gh-udT" secondAttribute="trailing" constant="20" id="SbX-de-8dk"/>

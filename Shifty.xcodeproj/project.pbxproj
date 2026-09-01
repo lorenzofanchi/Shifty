@@ -19,6 +19,7 @@
 		437556B41FF745A6001951AB /* Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437556B31FF745A6001951AB /* Setup.swift */; };
 		437556B61FF746BD001951AB /* SlideSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437556B51FF746BD001951AB /* SlideSegue.swift */; };
 		437B7179273E0889006AD485 /* SwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437B7178273E0889006AD485 /* SwitchView.swift */; };
+		E3966E78084A032A362EF5AA /* SetupPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEF6D8FDDC00AC08920249A /* SetupPreviews.swift */; };
 		825D0478F2B81738C0562C54 /* FirstMouseControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9451A7D5F25294DC41AD078E /* FirstMouseControls.swift */; };
 		437D7E161EC015CB00544FC8 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437D7E151EC015CB00544FC8 /* SliderView.swift */; };
 		4394DDA91EBE376F00F22908 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4394DDA21EBE376F00F22908 /* AppDelegate.swift */; };
@@ -112,6 +113,7 @@
 		437556B31FF745A6001951AB /* Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Setup.swift; path = Shifty/Setup.swift; sourceTree = "<group>"; };
 		437556B51FF746BD001951AB /* SlideSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SlideSegue.swift; path = Shifty/SlideSegue.swift; sourceTree = "<group>"; };
 		437B7178273E0889006AD485 /* SwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchView.swift; sourceTree = "<group>"; };
+		EBEF6D8FDDC00AC08920249A /* SetupPreviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SetupPreviews.swift; path = Shifty/SetupPreviews.swift; sourceTree = "<group>"; };
 		9451A7D5F25294DC41AD078E /* FirstMouseControls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FirstMouseControls.swift; path = Shifty/FirstMouseControls.swift; sourceTree = "<group>"; };
 		437D7E151EC015CB00544FC8 /* SliderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SliderView.swift; path = Shifty/SliderView.swift; sourceTree = "<group>"; };
 		4394DDA21EBE376F00F22908 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Shifty/AppDelegate.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				4394DDA81EBE376F00F22908 /* StatusMenuController.swift */,
 				437D7E151EC015CB00544FC8 /* SliderView.swift */,
 				437B7178273E0889006AD485 /* SwitchView.swift */,
+				EBEF6D8FDDC00AC08920249A /* SetupPreviews.swift */,
 				9451A7D5F25294DC41AD078E /* FirstMouseControls.swift */,
 				790FE2A060A4BB69E1A21E3E /* SettingsWindowController.swift */,
 				43D5C2381FC35FB500AF88E0 /* MainMenu.xib */,
@@ -573,6 +576,7 @@
 				4394DDAD1EBE376F00F22908 /* StatusMenuController.swift in Sources */,
 				43B9DE1B1FB592AE002C4C29 /* PrefAboutViewController.swift in Sources */,
 				437B7179273E0889006AD485 /* SwitchView.swift in Sources */,
+				E3966E78084A032A362EF5AA /* SetupPreviews.swift in Sources */,
 				825D0478F2B81738C0562C54 /* FirstMouseControls.swift in Sources */,
 				6FE61FC157158E55EB6722FB /* SettingsWindowController.swift in Sources */,
 				43F974E72213D9D200224CF4 /* AppleEventsManager.m in Sources */,

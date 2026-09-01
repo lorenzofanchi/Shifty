@@ -60,7 +60,6 @@ class SetupView: NSView {
     
 
 class WebsiteShiftingSetupViewController: NSViewController {
-    @IBOutlet weak var websiteShiftingScreenshotView: NSImageView!
 
     /// Yes used to be a segue and nothing else: it moved to the accessibility
     /// page, and granting there was what switched the feature on, by way of the
@@ -76,21 +75,6 @@ class WebsiteShiftingSetupViewController: NSViewController {
         }
     }
     
-    override func viewDidLoad() {
-        var imageName: String
-        
-        if let language = Locale.current.language.languageCode?.identifier {
-            imageName = "websiteShiftingScreenshot-\(language)"
-            
-            if let script = Locale.current.language.script?.identifier {
-                imageName.append("-\(script)")
-            }
-        } else {
-            imageName = "websiteShiftingScreenshot-en"
-        }
-        
-        websiteShiftingScreenshotView.image = NSImage(named: imageName)
-    }
 }
 
 

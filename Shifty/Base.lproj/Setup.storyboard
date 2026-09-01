@@ -133,6 +133,9 @@ DQ
         <scene sceneID="4dx-09-CxY">
             <objects>
                 <viewController storyboardIdentifier="destinationViewController" id="92U-Sh-UpN" customClass="WebsiteShiftingSetupViewController" customModule="Shifty" customModuleProvider="target" sceneMemberID="viewController">
+                    <connections>
+                        <outlet property="browserListLabel" destination="fxw-jc-XI4" id="s9E-ou-list"/>
+                    </connections>
                     <view key="view" ambiguous="YES" id="NqW-NI-dEn" customClass="SetupView" customModule="Shifty" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="475" height="450"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -201,7 +204,7 @@ DQ
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fxw-jc-XI4">
                                 <rect key="frame" x="20" y="150" width="435" height="32"/>
-                                <textFieldCell key="cell" lineBreakMode="wordWrapping" alignment="center" title="Works with Safari, Chrome, Chromium, Edge, Brave, Opera and Vivaldi, including their beta and developer builds." id="s9E-Fw-supports">
+                                <textFieldCell key="cell" lineBreakMode="wordWrapping" alignment="center" title="Works with Safari, Chrome, Chromium, Edge, Brave, Opera and Vivaldi." id="s9E-Fw-supports">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

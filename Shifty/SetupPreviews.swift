@@ -5,81 +5,187 @@
 
 import Cocoa
 
-// The setup wizard used to illustrate itself with screenshots: one of the menu
-// bar, one of the menu with website rules, the latter in five languages. Both
-// were captured in 2021 and both were wrong within one release of changing the
-// menu. These draw the same idea from the same system colours as the rest of the
-// window, so there is nothing left to recapture.
+// The wizard used to illustrate itself with screenshots: one of the menu bar,
+// one of the menu, the latter in five languages. Both were captured in 2021 and
+// both were wrong within one release of the menu changing. These build the same
+// idea out of the app's own icon, its own menu switch and the system's colours,
+// so there is nothing left to recapture.
 
-/// A menu bar with Shifty's icon sitting in it. Page 1 only needs to say
-/// "look up there", so it shows the bar rather than the whole menu.
-class MenuBarPreview: NSView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 300, height: 54) }
-    override var allowsVibrancy: Bool { false }
+/// Decorative: swallow clicks so nothing inside looks pressable.
+class PreviewView: NSView {
+    override func hitTest(_ point: NSPoint) -> NSView? { return nil }
 
-    override func draw(_ dirtyRect: NSRect) {
-        let bar = NSRect(x: 0, y: bounds.height - 26, width: bounds.width, height: 26)
-        NSColor.tertiaryLabelColor.withAlphaComponent(0.22).setFill()
-        NSBezierPath(roundedRect: bar, xRadius: 6, yRadius: 6).fill()
+    static func menuLabel(_ text: String, dim: Bool = false, semibold: Bool = false) -> NSTextField {
+        let label = NSTextField(labelWithString: text)
+        label.font = semibold
+            ? .systemFont(ofSize: NSFont.systemFontSize, weight: .semibold)
+            : .menuFont(ofSize: 0)
+        label.textColor = dim ? .tertiaryLabelColor : .labelColor
+        return label
+    }
 
-        // the sun, in the right hand cluster where status items live
-        let d: CGFloat = 15
-        let sun = NSRect(x: bar.maxX - 34 - d, y: bar.midY - d / 2, width: d, height: d)
-        NSColor.labelColor.withAlphaComponent(0.75).setFill()
-        NSBezierPath(ovalIn: sun).fill()
-        NSColor.labelColor.withAlphaComponent(0.35).setFill()
-        for neighbour in 0..<2 {
-            let x = sun.minX - CGFloat(neighbour + 1) * 26
-            NSBezierPath(ovalIn: NSRect(x: x, y: sun.minY + 2, width: d - 4, height: d - 4)).fill()
-        }
-
-        // a pointer up to it, so it reads as "that one"
-        let tip = NSPoint(x: sun.midX, y: bar.minY - 6)
-        let arrow = NSBezierPath()
-        arrow.move(to: NSPoint(x: tip.x, y: tip.y))
-        arrow.line(to: NSPoint(x: tip.x - 5, y: tip.y - 8))
-        arrow.line(to: NSPoint(x: tip.x + 5, y: tip.y - 8))
-        arrow.close()
-        NSColor.controlAccentColor.setFill()
-        arrow.fill()
+    /// A panel with a menu's proportions: same corner radius, same faint edge.
+    static func menuPanel() -> NSView {
+        let panel = NSView()
+        panel.wantsLayer = true
+        panel.layer?.cornerRadius = 8
+        panel.layer?.cornerCurve = .continuous
+        panel.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        panel.layer?.borderWidth = 1
+        panel.layer?.borderColor = NSColor.separatorColor.cgColor
+        panel.shadow = {
+            let s = NSShadow()
+            s.shadowColor = NSColor.black.withAlphaComponent(0.28)
+            s.shadowBlurRadius = 10
+            s.shadowOffset = NSSize(width: 0, height: -3)
+            return s
+        }()
+        return panel
     }
 }
 
 
-/// Two of the menu's website rows, one of them ticked. Page 2 needs to show
-/// what a website rule looks like, not the whole menu.
-class WebsiteRulesPreview: NSView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 340, height: 92) }
-    override var allowsVibrancy: Bool { false }
+/// The menu bar, with Shifty's real template icon in it. Page 1 says "look up
+/// there", so it shows the bar and what drops out of it when you click.
+class MenuBarPreview: PreviewView {
+    override var intrinsicContentSize: NSSize { NSSize(width: 380, height: 150) }
 
-    private let rows = [
-        (NSLocalizedString("setup.rule_example_domain", comment: "Disable for github.com"), true),
-        (NSLocalizedString("setup.rule_example_subdomain", comment: "Disable for gist.github.com"), false),
-    ]
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        guard subviews.isEmpty else { return }
 
-    override func draw(_ dirtyRect: NSRect) {
-        NSColor.tertiaryLabelColor.withAlphaComponent(0.14).setFill()
-        NSBezierPath(roundedRect: bounds, xRadius: 8, yRadius: 8).fill()
+        let bar = NSView()
+        bar.wantsLayer = true
+        bar.layer?.cornerRadius = 6
+        bar.layer?.backgroundColor = NSColor.tertiaryLabelColor.withAlphaComponent(0.16).cgColor
 
-        let inset: CGFloat = 12
-        let rowHeight: CGFloat = 26
-        var y = bounds.height - inset - rowHeight
+        // The real thing, tinted the way the menu bar tints it.
+        let icon = NSImageView()
+        icon.image = NSImage(named: "shiftyMenuIcon")
+        icon.image?.isTemplate = true
+        icon.contentTintColor = .labelColor
+        icon.imageScaling = .scaleProportionallyDown
 
-        for (title, isOn) in rows {
-            let text = NSAttributedString(string: title, attributes: [
-                .font: NSFont.menuFont(ofSize: 12),
-                .foregroundColor: isOn ? NSColor.labelColor : NSColor.tertiaryLabelColor,
-            ])
-            text.draw(at: NSPoint(x: inset + 18, y: y + (rowHeight - text.size().height) / 2))
-
-            if isOn {
-                let tick = NSAttributedString(string: "✓", attributes: [
-                    .font: NSFont.menuFont(ofSize: 12),
-                    .foregroundColor: NSColor.controlAccentColor,
-                ])
-                tick.draw(at: NSPoint(x: inset, y: y + (rowHeight - tick.size().height) / 2))
-            }
-            y -= rowHeight + 4
+        // Shifty sits leftmost: a status item added now goes to the left of the
+        // ones already there.
+        let neighbours = (0..<2).map { _ -> NSView in
+            let dot = NSView()
+            dot.wantsLayer = true
+            dot.layer?.cornerRadius = 4
+            dot.layer?.backgroundColor = NSColor.labelColor.withAlphaComponent(0.28).cgColor
+            dot.widthAnchor.constraint(equalToConstant: 8).isActive = true
+            dot.heightAnchor.constraint(equalToConstant: 8).isActive = true
+            return dot
         }
+        let clock = PreviewView.menuLabel("9:41", dim: true)
+        clock.font = .systemFont(ofSize: 11)
+
+        let cluster = NSStackView(views: [icon] + neighbours + [clock])
+        cluster.orientation = .horizontal
+        cluster.alignment = .centerY
+        cluster.spacing = 10
+        icon.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 15).isActive = true
+
+        // The menu that drops from it, using the switch the real menu draws.
+        let toggle = MenuSwitch()
+        toggle.isOn = true
+        let switchRow = NSStackView(views: [
+            PreviewView.menuLabel("Night Shift", semibold: true),
+            NSView(),
+            toggle,
+        ])
+        switchRow.orientation = .horizontal
+        switchRow.alignment = .centerY
+
+        let rows = NSStackView(views: [
+            switchRow,
+            PreviewView.menuLabel("Enabled until sunrise", dim: true),
+        ])
+        rows.orientation = .vertical
+        rows.alignment = .leading
+        rows.spacing = 3
+        rows.edgeInsets = NSEdgeInsets(top: 8, left: 12, bottom: 10, right: 12)
+
+        let panel = PreviewView.menuPanel()
+        panel.addSubview(rows)
+        rows.translatesAutoresizingMaskIntoConstraints = false
+
+        for v in [bar, cluster, panel] { v.translatesAutoresizingMaskIntoConstraints = false }
+        addSubview(bar)
+        bar.addSubview(cluster)
+        addSubview(panel)
+
+        NSLayoutConstraint.activate([
+            bar.topAnchor.constraint(equalTo: topAnchor),
+            bar.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bar.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bar.heightAnchor.constraint(equalToConstant: 24),
+
+            cluster.trailingAnchor.constraint(equalTo: bar.trailingAnchor, constant: -12),
+            cluster.centerYAnchor.constraint(equalTo: bar.centerYAnchor),
+
+            // hanging directly below the icon, as a status item menu does
+            panel.topAnchor.constraint(equalTo: bar.bottomAnchor, constant: 5),
+            panel.leadingAnchor.constraint(equalTo: icon.leadingAnchor, constant: -12),
+            panel.widthAnchor.constraint(equalToConstant: 190),
+
+            rows.topAnchor.constraint(equalTo: panel.topAnchor),
+            rows.leadingAnchor.constraint(equalTo: panel.leadingAnchor),
+            rows.trailingAnchor.constraint(equalTo: panel.trailingAnchor),
+            rows.bottomAnchor.constraint(equalTo: panel.bottomAnchor),
+        ])
+    }
+}
+
+
+/// Two of the menu's website rows, with the subdomain indented under the domain
+/// exactly as the real menu indents it.
+class WebsiteRulesPreview: PreviewView {
+    override var intrinsicContentSize: NSSize { NSSize(width: 330, height: 92) }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        guard subviews.isEmpty else { return }
+
+        func row(_ text: String, ticked: Bool, indent: CGFloat) -> NSView {
+            let tick = PreviewView.menuLabel("✓")
+            tick.textColor = ticked ? .controlAccentColor : .clear
+            tick.alignment = .center
+            tick.widthAnchor.constraint(equalToConstant: 14).isActive = true
+
+            let stack = NSStackView(views: [tick, PreviewView.menuLabel(text, dim: !ticked)])
+            stack.orientation = .horizontal
+            stack.alignment = .firstBaseline
+            stack.spacing = 4
+            stack.edgeInsets = NSEdgeInsets(top: 0, left: indent, bottom: 0, right: 0)
+            return stack
+        }
+
+        let rows = NSStackView(views: [
+            row(NSLocalizedString("setup.rule_example_domain",
+                                  comment: "Disable for github.com"), ticked: true, indent: 0),
+            row(NSLocalizedString("setup.rule_example_subdomain",
+                                  comment: "Disable for gist.github.com"), ticked: false, indent: 18),
+        ])
+        rows.orientation = .vertical
+        rows.alignment = .leading
+        rows.spacing = 6
+        rows.edgeInsets = NSEdgeInsets(top: 10, left: 10, bottom: 12, right: 14)
+
+        let panel = PreviewView.menuPanel()
+        panel.addSubview(rows)
+        rows.translatesAutoresizingMaskIntoConstraints = false
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(panel)
+
+        NSLayoutConstraint.activate([
+            panel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            panel.topAnchor.constraint(equalTo: topAnchor),
+            rows.topAnchor.constraint(equalTo: panel.topAnchor),
+            rows.leadingAnchor.constraint(equalTo: panel.leadingAnchor),
+            rows.trailingAnchor.constraint(equalTo: panel.trailingAnchor),
+            rows.bottomAnchor.constraint(equalTo: panel.bottomAnchor),
+        ])
     }
 }

@@ -60,6 +60,15 @@ class SetupView: NSView {
     
 
 class WebsiteShiftingSetupViewController: NSViewController {
+    @IBOutlet weak var browserListLabel: NSTextField!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // The storyboard label was single line, so the list ran off the edge.
+        browserListLabel.maximumNumberOfLines = 0
+        browserListLabel.lineBreakMode = .byWordWrapping
+        browserListLabel.preferredMaxLayoutWidth = 415
+    }
 
     /// Yes used to be a segue and nothing else: it moved to the accessibility
     /// page, and granting there was what switched the feature on, by way of the

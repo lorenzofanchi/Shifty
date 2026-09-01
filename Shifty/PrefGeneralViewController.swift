@@ -65,6 +65,18 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
         
         defaultDarkModeState = SLSGetAppearanceThemeLegacy()
 
+        updateAccessibilityNotice()
+        DistributedNotificationCenter.default().addObserver(
+            forName: NSNotification.Name("com.apple.accessibility.api"),
+            object: nil,
+            queue: .main)
+        { [weak self] _ in
+            // The trust state lags the notification slightly.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self?.updateAccessibilityNotice()
+            }
+        }
+
         //Fix layer-backing issues in 10.12 that cause window corners to not be rounded.
         if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 10, minorVersion: 13, patchVersion: 0)) {
             view.wantsLayer = false
@@ -128,27 +140,67 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
         logw("Dark mode sync preference set to \(sender.state.rawValue)")
     }
 
+    /// Shown while Website Shifting is on but Accessibility hasn't been granted.
+    /// macOS only ever shows its own prompt once, so after a denial this row is
+    /// the only thing left saying the feature isn't actually working.
+    private lazy var accessibilityNotice: NSStackView = {
+        let label = NSTextField(labelWithString:
+            NSLocalizedString("prefs.accessibility_needed",
+                              comment: "macOS needs to allow Shifty to read your browser's address."))
+        label.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+        label.textColor = .secondaryLabelColor
+        label.lineBreakMode = .byWordWrapping
+        label.preferredMaxLayoutWidth = 300
+
+        let button = NSButton(
+            title: NSLocalizedString("prefs.open_accessibility", comment: "Open Accessibility Settings..."),
+            target: self,
+            action: #selector(openAccessibilitySettings))
+        button.controlSize = .small
+        button.bezelStyle = .rounded
+
+        let stack = NSStackView(views: [label, button])
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 6
+        return stack
+    }()
+
+    func updateAccessibilityNotice() {
+        let needed = UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled)
+            && !UIElement.isProcessTrusted()
+
+        guard let column = websiteShiftingButton.superview as? NSStackView else { return }
+
+        if needed, accessibilityNotice.superview == nil {
+            column.addView(accessibilityNotice, in: .bottom)
+        } else if !needed, accessibilityNotice.superview != nil {
+            column.removeView(accessibilityNotice)
+        }
+    }
+
+    @objc private func openAccessibilitySettings() {
+        // Prompt first: it re-adds Shifty to the list if it was removed, so the
+        // row the person is about to look for is actually there.
+        _ = UIElement.isProcessTrusted(withPrompt: true)
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+    }
+
     @IBAction func setWebsiteControl(_ sender: NSButtonCell) {
         logw("Website control preference clicked")
         if sender.state == .on {
-            if !UIElement.isProcessTrusted() {
-                logw("Accessibility permissions alert shown")
-
-                UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
-                NSApp.runModal(for: AccessibilityWindow().window!)
-
-                // Access may have been granted while the prompt was up. Read the
-                // real state rather than waiting on the accessibility API
-                // notification, which isn't reliably delivered during a modal
-                // run loop. The checkbox is bound to this default, so it follows.
-                let isTrusted = UIElement.isProcessTrusted()
-                UserDefaults.standard.set(isTrusted, forKey: Keys.isWebsiteControlEnabled)
-                logw("Website control enabled after prompt: \(isTrusted)")
+            // Let macOS do the asking. Its alert is the only thing that adds
+            // Shifty to the Accessibility list, which is what makes the switch
+            // findable. It can't grant access, so the checkbox stays where the
+            // person put it and the notice below carries the "not yet" state.
+            if !UIElement.isProcessTrusted(withPrompt: true) {
+                logw("Accessibility not granted; system prompt shown")
             }
         } else {
             BrowserManager.shared.stopBrowserWatcher()
             logw("Website control disabled")
         }
+        updateAccessibilityNotice()
     }
     
     @IBAction func setTrueToneControl(_ sender: NSButtonCell) {

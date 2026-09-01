@@ -60,7 +60,7 @@
 "alert.not_now" = "Plus tard";
 "alert.close" = "Fermer";
 
-
-
-
-
+/* Permissions. English in non-English locales until translated. */
+"menu.allow_accessibility" = "Allow Website Shifting…";
+"prefs.accessibility_needed" = "macOS needs to allow Shifty to read your browser’s address.";
+"prefs.open_accessibility" = "Open Accessibility Settings…";

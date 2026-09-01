@@ -24,6 +24,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBOutlet weak var disableDomainMenuItem: NSMenuItem!
     @IBOutlet weak var disableSubdomainMenuItem: NSMenuItem!
     @IBOutlet weak var enableBrowserAutomationMenuItem: NSMenuItem!
+    @IBOutlet weak var allowAccessibilityMenuItem: NSMenuItem!
     @IBOutlet weak var disableHourMenuItem: NSMenuItem!
     @IBOutlet weak var disableCustomMenuItem: NSMenuItem!
     @IBOutlet weak var settingsMenuItem: NSMenuItem!
@@ -250,6 +251,19 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         }
         
         
+        // MARK: allow accessibility
+        // Same shape as the automation row below: an indented nudge that shows
+        // only while something the feature needs is missing.
+        if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled)
+            && !UIElement.isProcessTrusted() {
+            allowAccessibilityMenuItem.isHidden = false
+            allowAccessibilityMenuItem.title = NSLocalizedString("menu.allow_accessibility",
+                                                                 comment: "Allow Website Shifting...")
+        } else {
+            allowAccessibilityMenuItem.isHidden = true
+        }
+
+
         // MARK: enable browser automation
         if BrowserManager.shared.currentAppIsSupportedBrowser &&
             BrowserManager.shared.permissionToAutomateCurrentApp == .denied {
@@ -476,6 +490,13 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         } else {
             RuleManager.shared.setSubdomainRule(.none, forSubdomain: currentSubdomain)
         }
+    }
+    
+    
+    
+    @IBAction func allowAccessibility(_ sender: Any) {
+        _ = UIElement.isProcessTrusted(withPrompt: true)
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
     }
     
     

@@ -95,38 +95,6 @@ class WebsiteShiftingSetupViewController: NSViewController {
 
 
 
-class AccessibilityViewController: NSViewController {
-    var observer: NSObjectProtocol!
-    
-    @IBOutlet weak var accessibilitySetupView: NSView!
-    
-    override func viewWillAppear() {
-        super.viewWillAppear()
-        
-        
-    }
-    
-    override func viewDidAppear() {
-        super.viewDidAppear()
-        
-        observer = DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("com.apple.accessibility.api"), object: nil, queue: nil) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                if UIElement.isProcessTrusted() {
-                    self.showNextView()
-                }
-            })
-        }
-    }
-    
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-        DistributedNotificationCenter.default().removeObserver(observer as Any, name: NSNotification.Name("com.apple.accessibility.api"), object: nil)
-    }
-    
-    func showNextView() {
-        performSegue(withIdentifier: "showCompleteView", sender: self)
-    }
-}
 
 
 

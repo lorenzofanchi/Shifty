@@ -70,13 +70,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                    && !UIElement.isProcessTrusted())
             || ProcessInfo.processInfo.environment["show_setup"] == "true"
 
-        //Show alert if accessibility permissions have been revoked while app is not running
-        if !willShowSetupWindow
-            && userDefaults.bool(forKey: Keys.isWebsiteControlEnabled)
-            && !UIElement.isProcessTrusted() {
+        if userDefaults.bool(forKey: Keys.isWebsiteControlEnabled) && !UIElement.isProcessTrusted() {
+            // No alert. Settings and the menu both show this state without
+            // interrupting, and macOS won't show its own prompt twice anyway.
             logw("Accessibility permissions revoked while app was not running")
-            showAccessibilityDeniedAlert()
-            userDefaults.set(false, forKey: Keys.isWebsiteControlEnabled)
         }
         
         observeAccessibilityApiNotifications()
@@ -121,22 +118,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    func showAccessibilityDeniedAlert() {
-        NSApplication.shared.activate(ignoringOtherApps: true)
-        
-        let alert: NSAlert = NSAlert()
-        alert.messageText = NSLocalizedString("alert.accessibility_disabled_message", comment: "Accessibility permissions for Shifty have been disabled")
-        alert.informativeText = NSLocalizedString("alert.accessibility_disabled_informative", comment: "Accessibility must be allowed to enable website shifting. Grant access to Shifty in Privacy & Security settings, located in System Settings.")
-        alert.alertStyle = NSAlert.Style.warning
-        alert.addButton(withTitle: NSLocalizedString("alert.open_preferences", comment: "Open System Settings"))
-        alert.addButton(withTitle: NSLocalizedString("alert.not_now", comment: "Not now"))
-        if alert.runModal() == .alertFirstButtonReturn {
-            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-            logw("Open System Settings button clicked")
-        } else {
-            logw("Not now button clicked")
-        }
-    }
     
     func showSetupWindow() {
         let storyboard = NSStoryboard(name: "Setup", bundle: nil)

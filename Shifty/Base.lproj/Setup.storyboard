@@ -174,7 +174,7 @@ DQ
 </string>
                                 </buttonCell>
                                 <connections>
-                                    <segue destination="PlF-rh-bvd" kind="custom" customClass="SlideForwardSegue" customModule="Shifty" customModuleProvider="target" id="RBK-ii-duJ"/>
+                                    <segue destination="j1O-j4-Iou" kind="custom" customClass="SlideForwardSegue" customModule="Shifty" customModuleProvider="target" id="RBK-ii-duJ"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j4y-h2-U3X">
@@ -480,93 +480,6 @@ DQ
             </objects>
             <point key="canvasLocation" x="622.5" y="578"/>
         </scene>
-        <!--Accessibility View Controller-->
-        <scene sceneID="1wS-7b-mSm">
-            <objects>
-                <viewController storyboardIdentifier="accessibilityViewController" id="PlF-rh-bvd" customClass="AccessibilityViewController" customModule="Shifty" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="a2t-LO-CJe" customClass="SetupView" customModule="Shifty" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="475" height="450"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2a5-C1-Dyc">
-                                <rect key="frame" x="270" y="13" width="192" height="32"/>
-                                <buttonCell key="cell" type="push" title="Open System Settings" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lqU-rF-E5t">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                    <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="openSystemPrefsClicked:" target="a2t-LO-CJe" id="R5K-nv-CCD"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CLB-OS-6L8">
-                                <rect key="frame" x="190" y="13" width="84" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="BrV-W5-n3I"/>
-                                </constraints>
-                                <buttonCell key="cell" type="push" title="Skip" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0wv-vs-acj">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                    <string key="keyEquivalent"></string>
-                                </buttonCell>
-                                <connections>
-                                    <segue destination="j1O-j4-Iou" kind="custom" identifier="showCompleteView" customClass="SlideForwardSegue" customModule="Shifty" customModuleProvider="target" id="7yX-3s-HfZ"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HyY-Eu-arg">
-                                <rect key="frame" x="65" y="18" width="26" height="26"/>
-                                <buttonCell key="cell" type="round" title="?" bezelStyle="circular" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hnI-7M-qBT">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="accessibilityHelp:" target="a2t-LO-CJe" id="ihi-P6-6NQ"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WXS-J3-zgH">
-                                <rect key="frame" x="13" y="13" width="54" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="qYL-7n-j51"/>
-                                </constraints>
-                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSGoLeftTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Uyi-J6-pvR">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                    <string key="keyEquivalent"></string>
-                                </buttonCell>
-                                <connections>
-                                    <segue destination="92U-Sh-UpN" kind="custom" customClass="SlideBackwardSegue" customModule="Shifty" customModuleProvider="target" id="OTp-Xx-YUK"/>
-                                </connections>
-                            </button>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="2Gt-ut-hn7" customClass="AccessibilityView" customModule="Shifty" customModuleProvider="target">
-                                <rect key="frame" x="20" y="60" width="435" height="390"/>
-                            </customView>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="2a5-C1-Dyc" firstAttribute="leading" secondItem="CLB-OS-6L8" secondAttribute="trailing" constant="10" id="3PK-Ci-jyl"/>
-                            <constraint firstAttribute="bottom" secondItem="WXS-J3-zgH" secondAttribute="bottom" constant="20" id="8Q4-eA-vLX"/>
-                            <constraint firstItem="CLB-OS-6L8" firstAttribute="baseline" secondItem="HyY-Eu-arg" secondAttribute="baseline" id="Cl7-NN-A6n"/>
-                            <constraint firstAttribute="trailing" secondItem="2a5-C1-Dyc" secondAttribute="trailing" constant="20" id="H7O-zE-wrv"/>
-                            <constraint firstItem="CLB-OS-6L8" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="HyY-Eu-arg" secondAttribute="trailing" constant="10" id="JuB-2o-99i"/>
-                            <constraint firstAttribute="trailing" secondItem="2Gt-ut-hn7" secondAttribute="trailing" constant="20" id="MNH-HL-mv3"/>
-                            <constraint firstItem="2a5-C1-Dyc" firstAttribute="top" secondItem="2Gt-ut-hn7" secondAttribute="bottom" constant="20" id="NbZ-NK-IBP"/>
-                            <constraint firstItem="2Gt-ut-hn7" firstAttribute="top" secondItem="a2t-LO-CJe" secondAttribute="top" id="OFJ-h2-fKe"/>
-                            <constraint firstItem="WXS-J3-zgH" firstAttribute="leading" secondItem="a2t-LO-CJe" secondAttribute="leading" constant="20" id="S9r-u5-TFe"/>
-                            <constraint firstItem="2a5-C1-Dyc" firstAttribute="centerY" secondItem="CLB-OS-6L8" secondAttribute="centerY" id="eO5-Fq-jL6"/>
-                            <constraint firstItem="2Gt-ut-hn7" firstAttribute="leading" secondItem="a2t-LO-CJe" secondAttribute="leading" constant="20" id="j6l-4Q-H4P"/>
-                            <constraint firstAttribute="bottom" secondItem="2a5-C1-Dyc" secondAttribute="bottom" constant="20" id="lgC-eY-Uju"/>
-                            <constraint firstItem="HyY-Eu-arg" firstAttribute="leading" secondItem="WXS-J3-zgH" secondAttribute="trailing" constant="8" id="rqu-Jy-OtT"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="accessibilitySetupView" destination="2Gt-ut-hn7" id="TjZ-Nw-not"/>
-                    </connections>
-                </viewController>
-                <customObject id="YJL-cy-XNo" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1176" y="578"/>
-        </scene>
         <!--Final View Controller-->
         <scene sceneID="EL0-es-9Lf">
             <objects>
@@ -602,7 +515,7 @@ DQ
                                     <string key="keyEquivalent"></string>
                                 </buttonCell>
                                 <connections>
-                                    <segue destination="PlF-rh-bvd" kind="custom" customClass="SlideBackwardSegue" customModule="Shifty" customModuleProvider="target" id="cdz-pS-K8F"/>
+                                    <segue destination="92U-Sh-UpN" kind="custom" customClass="SlideBackwardSegue" customModule="Shifty" customModuleProvider="target" id="cdz-pS-K8F"/>
                                 </connections>
                             </button>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="BGI-WD-n0c">
@@ -678,7 +591,6 @@ DQ
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="RBK-ii-duJ"/>
-        <segue reference="OTp-Xx-YUK"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="NSGoLeftTemplate" width="10" height="14"/>

@@ -128,6 +128,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         NSApplication.shared.activate(ignoringOtherApps: true)
         setupWindowController.showWindow(self)
+        setupWindow.center()
         setupWindow.makeMain()
         
         UserDefaults.standard.set(true, forKey: Keys.hasSetupWindowShown)

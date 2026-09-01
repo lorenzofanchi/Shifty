@@ -48,7 +48,7 @@ class PreviewView: NSView {
 /// The menu bar, with Shifty's real template icon in it. Page 1 says "look up
 /// there", so it shows the bar and what drops out of it when you click.
 class MenuBarPreview: PreviewView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 435, height: 150) }
+    override var intrinsicContentSize: NSSize { NSSize(width: 435, height: 152) }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
@@ -66,26 +66,45 @@ class MenuBarPreview: PreviewView {
         icon.contentTintColor = .labelColor
         icon.imageScaling = .scaleProportionallyDown
 
-        // Shifty sits leftmost: a status item added now goes to the left of the
-        // ones already there.
-        let neighbours = (0..<2).map { _ -> NSView in
-            let dot = NSView()
-            dot.wantsLayer = true
-            dot.layer?.cornerRadius = 4
-            dot.layer?.backgroundColor = NSColor.labelColor.withAlphaComponent(0.28).cgColor
-            dot.widthAnchor.constraint(equalToConstant: 8).isActive = true
-            dot.heightAnchor.constraint(equalToConstant: 8).isActive = true
-            return dot
-        }
-        let clock = PreviewView.menuLabel("9:41", dim: true)
-        clock.font = .systemFont(ofSize: 11)
+        // macOS draws a rounded highlight behind the status item whose menu is
+        // open. This is that, so it's clear which icon the menu came from.
+        let highlight = NSView()
+        highlight.wantsLayer = true
+        highlight.layer?.cornerRadius = 6
+        highlight.layer?.cornerCurve = .continuous
+        highlight.layer?.backgroundColor = NSColor.labelColor.withAlphaComponent(0.20).cgColor
+        highlight.addSubview(icon)
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            icon.widthAnchor.constraint(equalToConstant: 16),
+            icon.heightAnchor.constraint(equalToConstant: 16),
+            icon.centerXAnchor.constraint(equalTo: highlight.centerXAnchor),
+            icon.centerYAnchor.constraint(equalTo: highlight.centerYAnchor),
+            highlight.widthAnchor.constraint(equalToConstant: 30),
+            highlight.heightAnchor.constraint(equalToConstant: 20),
+        ])
 
-        let cluster = NSStackView(views: [icon] + neighbours + [clock])
+        // The items a real menu bar has to the right of a new status item, so
+        // Shifty sits where it actually would: leftmost of the group, because an
+        // item added now goes to the left of the ones already there.
+        func systemGlyph(_ symbol: String) -> NSImageView {
+            let view = NSImageView()
+            view.image = NSImage(systemSymbolName: symbol, accessibilityDescription: nil)
+            view.contentTintColor = .labelColor
+            view.imageScaling = .scaleProportionallyDown
+            view.heightAnchor.constraint(equalToConstant: 15).isActive = true
+            return view
+        }
+        let sound = systemGlyph("speaker.wave.2.fill")
+        let wifi = systemGlyph("wifi")
+        let controlCentre = systemGlyph("switch.2")
+        let clock = PreviewView.menuLabel("Tue 1 Sep  9:41")
+        clock.font = .systemFont(ofSize: 11.5)
+
+        let cluster = NSStackView(views: [highlight, sound, wifi, controlCentre, clock])
         cluster.orientation = .horizontal
         cluster.alignment = .centerY
-        cluster.spacing = 10
-        icon.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        cluster.spacing = 11
 
         // The menu that drops from it, using the switch the real menu draws.
         let toggle = MenuSwitch()
@@ -125,11 +144,10 @@ class MenuBarPreview: PreviewView {
             cluster.trailingAnchor.constraint(equalTo: bar.trailingAnchor, constant: -12),
             cluster.centerYAnchor.constraint(equalTo: bar.centerYAnchor),
 
-            // A status item menu hangs from its icon, but shifts left to stay on
-            // screen. Its right edge landing near the edge is what that looks
-            // like, and it keeps the panel inside this view's bounds.
+            // Hanging directly under the icon, which it can now that the system
+            // items push Shifty far enough from the right edge for it to fit.
             panel.topAnchor.constraint(equalTo: bar.bottomAnchor, constant: 5),
-            panel.trailingAnchor.constraint(equalTo: bar.trailingAnchor),
+            panel.leadingAnchor.constraint(equalTo: highlight.leadingAnchor),
             panel.widthAnchor.constraint(equalToConstant: 200),
 
             rows.topAnchor.constraint(equalTo: panel.topAnchor),

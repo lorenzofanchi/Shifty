@@ -160,38 +160,63 @@ class MenuBarPreview: PreviewView {
 
 
 /// Two of the menu's website rows, with the subdomain indented under the domain
-/// exactly as the real menu indents it.
+/// exactly as the real menu indents it. Sized from the text it draws, so the
+/// padding around it is the padding chosen here rather than whatever is left
+/// over from a round number.
 class WebsiteRulesPreview: PreviewView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 300, height: 86) }
+    private static let tick: CGFloat = 14      // column the checkmark sits in
+    private static let tickGap: CGFloat = 4
+    private static let indent: CGFloat = 18    // the real menu's indent level
+    private static let leftInset: CGFloat = 12
+    private static let rightPad: CGFloat = 14
+    private static let topInset: CGFloat = 11
+    private static let bottomInset: CGFloat = 11
+    private static let rowGap: CGFloat = 8
+
+    private static var rows: [(text: String, ticked: Bool, indent: CGFloat)] {[
+        (NSLocalizedString("setup.rule_example_domain",
+                           comment: "Disable for github.com"), true, 0),
+        (NSLocalizedString("setup.rule_example_subdomain",
+                           comment: "Disable for gist.github.com"), false, indent),
+    ]}
+
+    private static var font: NSFont { .menuFont(ofSize: 0) }
+
+    override var intrinsicContentSize: NSSize {
+        let widest = Self.rows
+            .map { $0.indent + Self.tick + Self.tickGap
+                   + ($0.text as NSString).size(withAttributes: [.font: Self.font]).width }
+            .max() ?? 0
+        let rowHeight = ceil(Self.font.boundingRectForFont.height)
+        return NSSize(
+            width: ceil(widest) + Self.leftInset + Self.rightPad,
+            height: Self.topInset + rowHeight * 2 + Self.rowGap + Self.bottomInset)
+    }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         guard subviews.isEmpty else { return }
 
-        func row(_ text: String, ticked: Bool, indent: CGFloat) -> NSView {
+        func row(_ item: (text: String, ticked: Bool, indent: CGFloat)) -> NSView {
             let tick = PreviewView.menuLabel("✓")
-            tick.textColor = ticked ? .controlAccentColor : .clear
+            tick.textColor = item.ticked ? .controlAccentColor : .clear
             tick.alignment = .center
-            tick.widthAnchor.constraint(equalToConstant: 14).isActive = true
+            tick.widthAnchor.constraint(equalToConstant: Self.tick).isActive = true
 
-            let stack = NSStackView(views: [tick, PreviewView.menuLabel(text, dim: !ticked)])
+            let stack = NSStackView(views: [tick, PreviewView.menuLabel(item.text, dim: !item.ticked)])
             stack.orientation = .horizontal
             stack.alignment = .firstBaseline
-            stack.spacing = 4
-            stack.edgeInsets = NSEdgeInsets(top: 0, left: indent, bottom: 0, right: 0)
+            stack.spacing = Self.tickGap
+            stack.edgeInsets = NSEdgeInsets(top: 0, left: item.indent, bottom: 0, right: 0)
             return stack
         }
 
-        let rows = NSStackView(views: [
-            row(NSLocalizedString("setup.rule_example_domain",
-                                  comment: "Disable for github.com"), ticked: true, indent: 0),
-            row(NSLocalizedString("setup.rule_example_subdomain",
-                                  comment: "Disable for gist.github.com"), ticked: false, indent: 18),
-        ])
+        let rows = NSStackView(views: Self.rows.map(row))
         rows.orientation = .vertical
         rows.alignment = .leading
-        rows.spacing = 8
-        rows.edgeInsets = NSEdgeInsets(top: 12, left: 12, bottom: 14, right: 12)
+        rows.spacing = Self.rowGap
+        rows.edgeInsets = NSEdgeInsets(top: Self.topInset, left: Self.leftInset,
+                                       bottom: Self.bottomInset, right: 0)
 
         let panel = PreviewView.menuPanel()
         panel.addSubview(rows)
@@ -200,16 +225,13 @@ class WebsiteRulesPreview: PreviewView {
         addSubview(panel)
 
         NSLayoutConstraint.activate([
-            panel.centerXAnchor.constraint(equalTo: centerXAnchor),
             panel.topAnchor.constraint(equalTo: topAnchor),
-            // Width is set rather than taken from the rows: letting the longest
-            // row decide left the text flush against the panel's right edge.
-            panel.widthAnchor.constraint(equalTo: widthAnchor),
             panel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            panel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            panel.trailingAnchor.constraint(equalTo: trailingAnchor),
 
             rows.topAnchor.constraint(equalTo: panel.topAnchor),
             rows.leadingAnchor.constraint(equalTo: panel.leadingAnchor),
-            rows.trailingAnchor.constraint(lessThanOrEqualTo: panel.trailingAnchor, constant: -16),
             rows.bottomAnchor.constraint(equalTo: panel.bottomAnchor),
         ])
     }

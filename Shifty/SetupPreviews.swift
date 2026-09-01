@@ -162,7 +162,7 @@ class MenuBarPreview: PreviewView {
 /// Two of the menu's website rows, with the subdomain indented under the domain
 /// exactly as the real menu indents it.
 class WebsiteRulesPreview: PreviewView {
-    override var intrinsicContentSize: NSSize { NSSize(width: 360, height: 178) }
+    override var intrinsicContentSize: NSSize { NSSize(width: 300, height: 86) }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
@@ -191,7 +191,7 @@ class WebsiteRulesPreview: PreviewView {
         rows.orientation = .vertical
         rows.alignment = .leading
         rows.spacing = 8
-        rows.edgeInsets = NSEdgeInsets(top: 14, left: 12, bottom: 16, right: 20)
+        rows.edgeInsets = NSEdgeInsets(top: 12, left: 12, bottom: 14, right: 12)
 
         let panel = PreviewView.menuPanel()
         panel.addSubview(rows)
@@ -199,20 +199,18 @@ class WebsiteRulesPreview: PreviewView {
         panel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(panel)
 
-        let browsers = BrowserStrip()
-        browsers.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(browsers)
-
         NSLayoutConstraint.activate([
             panel.centerXAnchor.constraint(equalTo: centerXAnchor),
             panel.topAnchor.constraint(equalTo: topAnchor),
+            // Width is set rather than taken from the rows: letting the longest
+            // row decide left the text flush against the panel's right edge.
+            panel.widthAnchor.constraint(equalTo: widthAnchor),
+            panel.bottomAnchor.constraint(equalTo: bottomAnchor),
+
             rows.topAnchor.constraint(equalTo: panel.topAnchor),
             rows.leadingAnchor.constraint(equalTo: panel.leadingAnchor),
-            rows.trailingAnchor.constraint(equalTo: panel.trailingAnchor),
+            rows.trailingAnchor.constraint(lessThanOrEqualTo: panel.trailingAnchor, constant: -16),
             rows.bottomAnchor.constraint(equalTo: panel.bottomAnchor),
-
-            browsers.topAnchor.constraint(equalTo: panel.bottomAnchor, constant: 26),
-            browsers.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
     }
 }
@@ -243,17 +241,17 @@ class BrowserStrip: PreviewView {
                 icon.image = NSImage(named: browser.asset)
             }
             icon.imageScaling = .scaleProportionallyDown
-            icon.widthAnchor.constraint(equalToConstant: 18).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 18).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
 
             let label = PreviewView.menuLabel(browser.name, dim: true)
-            label.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+            label.font = .systemFont(ofSize: NSFont.systemFontSize)
 
             let stack = NSStackView(views: [icon, label])
             stack.orientation = .horizontal
             stack.alignment = .centerY
-            stack.spacing = 6
-            stack.widthAnchor.constraint(equalToConstant: 96).isActive = true
+            stack.spacing = 8
+            stack.widthAnchor.constraint(equalToConstant: 110).isActive = true
             return stack
         }
 
@@ -269,7 +267,7 @@ class BrowserStrip: PreviewView {
         let grid = NSStackView(views: rows)
         grid.orientation = .vertical
         grid.alignment = .centerX
-        grid.spacing = 10
+        grid.spacing = 14
         grid.translatesAutoresizingMaskIntoConstraints = false
         addSubview(grid)
 

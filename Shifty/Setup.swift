@@ -68,6 +68,16 @@ class WebsiteShiftingSetupViewController: NSViewController {
         browserListLabel.maximumNumberOfLines = 0
         browserListLabel.lineBreakMode = .byWordWrapping
         browserListLabel.preferredMaxLayoutWidth = 415
+
+        // Under the sentence, not above it: the sentence says which browsers,
+        // the icons show them.
+        let browsers = BrowserStrip()
+        browsers.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(browsers)
+        NSLayoutConstraint.activate([
+            browsers.topAnchor.constraint(equalTo: browserListLabel.bottomAnchor, constant: 18),
+            browsers.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
     }
 
     /// Yes used to be a segue and nothing else: it moved to the accessibility

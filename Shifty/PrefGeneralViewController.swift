@@ -147,12 +147,14 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
         let label = NSTextField(labelWithString:
             NSLocalizedString("prefs.needs_access", comment: "Needs access"))
         label.font = .systemFont(ofSize: 10, weight: .semibold)
-        label.textColor = .secondaryLabelColor
+        // Orange, not grey: this says the feature the person just switched on
+        // isn't working yet, which is worth noticing.
+        label.textColor = .systemOrange
 
         let chip = NSView()
         chip.wantsLayer = true
         chip.layer?.cornerRadius = 4
-        chip.layer?.backgroundColor = NSColor.secondaryLabelColor.withAlphaComponent(0.14).cgColor
+        chip.layer?.backgroundColor = NSColor.systemOrange.withAlphaComponent(0.16).cgColor
         chip.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
         chip.addSubview(label)

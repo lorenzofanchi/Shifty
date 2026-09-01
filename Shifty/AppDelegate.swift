@@ -66,8 +66,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         //The setup window covers accessibility itself, so don't stack an alert on top of it
-        let willShowSetupWindow = (!userDefaults.bool(forKey: Keys.hasSetupWindowShown)
-                                   && !UIElement.isProcessTrusted())
+        // First run, whether or not access happens to be granted already. The
+        // old condition also required being untrusted, which made sense when
+        // the wizard existed to collect that permission.
+        let willShowSetupWindow = !userDefaults.bool(forKey: Keys.hasSetupWindowShown)
             || ProcessInfo.processInfo.environment["show_setup"] == "true"
 
         if userDefaults.bool(forKey: Keys.isWebsiteControlEnabled) && !UIElement.isProcessTrusted() {

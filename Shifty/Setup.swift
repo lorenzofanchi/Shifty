@@ -48,15 +48,6 @@ class SetupWindow: NSWindow {
 
 
 class SetupView: NSView {
-    @IBAction func accessibilityHelp(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://support.apple.com/guide/mac-help/allow-accessibility-apps-to-access-your-mac-mh43185")!)
-    }
-    
-    @IBAction func openSystemPrefsClicked(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-        logw("Open System Settings button clicked")
-    }
-    
     @IBAction func closeButtonClicked(_ sender: Any) {
         window?.close()
     }
@@ -70,6 +61,20 @@ class SetupView: NSView {
 
 class WebsiteShiftingSetupViewController: NSViewController {
     @IBOutlet weak var websiteShiftingScreenshotView: NSImageView!
+
+    /// Yes used to be a segue and nothing else: it moved to the accessibility
+    /// page, and granting there was what switched the feature on, by way of the
+    /// observer in AppDelegate. With that page gone, Yes has to do the work.
+    @IBAction func enableWebsiteShifting(_ sender: Any) {
+        UserDefaults.standard.set(true, forKey: Keys.isWebsiteControlEnabled)
+        logw("Website Shifting enabled during setup")
+
+        // Same ask as the checkbox in Settings: macOS prompts and lists Shifty,
+        // and the notice there carries the state until access is granted.
+        if !UIElement.isProcessTrusted(withPrompt: true) {
+            logw("Accessibility not granted; system prompt shown")
+        }
+    }
     
     override func viewDidLoad() {
         var imageName: String

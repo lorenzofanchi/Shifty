@@ -65,5 +65,10 @@
 "prefs.accessibility_needed" = "macOS needs to allow Shifty to read your browser’s address.";
 "prefs.open_accessibility" = "Open Accessibility Settings…";
 "prefs.needs_access" = "Needs access";
+"prefs.transition" = "Transition:";
+"prefs.transition_slow" = "Slow";
+"prefs.transition_normal" = "Normal";
+"prefs.transition_fast" = "Fast";
+"prefs.transition_very_fast" = "Very Fast";
 "setup.rule_example_domain" = "Disable for github.com";
 "setup.rule_example_subdomain" = "Disable for gist.github.com";

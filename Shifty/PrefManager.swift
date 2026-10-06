@@ -17,6 +17,7 @@ enum Keys {
     static let currentAppDisableRules = "disabledApps"
     static let runningAppDisableRules = "disabledRunningApps"
     static let browserRules = "browserRules"
+    static let transitionPeriod = "transitionPeriod"
 
     static let toggleNightShiftShortcut = "toggleNightShiftShortcut"
     static let incrementColorTempShortcut = "incrementColorTempShortcut"
@@ -55,6 +56,7 @@ class PrefManager {
             Keys.currentAppDisableRules: NSData(),
             Keys.runningAppDisableRules: NSData(),
             Keys.browserRules: NSData(),
+            Keys.transitionPeriod: NSNumber(value: -1),
             Keys.hasSetupWindowShown: NSNumber(value: false)
             ] as [String : Any]
 

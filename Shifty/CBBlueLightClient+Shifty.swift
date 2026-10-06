@@ -37,10 +37,26 @@ extension CBBlueLightClient {
     }
     
     func setNightShiftEnabled(_ newValue: Bool) {
+        // macOS fades Night Shift over 2s, and ignores a fade to the value it's
+        // already heading for. So start our own fade first, at the chosen
+        // period, and let macOS's then be the one that's ignored. -1 = leave it.
+        let period = UserDefaults.standard.double(forKey: Keys.transitionPeriod)
+        if period >= 0 {
+            BrightnessSystemClient.shared?.setProperty([
+                "BlueLightReductionFactorValue": newValue ? 1 : 0,
+                "BlueLightReductionFactorFadePeriod": period,
+            ] as NSDictionary, forKey: "BlueLightReductionFactor" as CFString)
+            // ponytail: corebrightnessd handles the two requests on different
+            // queues, and without a gap ours sometimes lands second. 50ms won
+            // 16 of 16 toggles; poll the factor instead if it ever loses.
+            usleep(50_000)
+        }
+
         setEnabled(newValue)
         
-        // Set to appropriate strength when in schedule transition by resetting schedule
-        if newValue && scheduledState {
+        // Set to appropriate strength when in schedule transition by resetting schedule.
+        // Not with our own fade: the reset drops to 0 and refades over 2s.
+        if newValue && scheduledState && period < 0 {
             let savedSchedule = schedule
             schedule = .off
             schedule = savedSchedule

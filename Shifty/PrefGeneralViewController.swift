@@ -65,6 +65,8 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
         
         defaultDarkModeState = SLSGetAppearanceThemeLegacy()
 
+        addTransitionRow()
+
         updateAccessibilityNotice()
         DistributedNotificationCenter.default().addObserver(
             forName: NSNotification.Name("com.apple.accessibility.api"),
@@ -264,6 +266,54 @@ class PrefGeneralViewController: NSViewController, SettingsPane {
             NightShiftManager.shared.schedule = .solar
             customTimeStackView.isHidden = true
         }
+    }
+
+    /// Fade lengths in seconds for Slow, Normal, Fast and Very Fast. -1 leaves
+    /// the fade to macOS.
+    // ponytail: guessed by eye; tune these if a speed feels off.
+    static let transitionPeriods: [Double] = [4, -1, 0.5, 0.1]
+
+    /// The "Transition:" row under the schedule. Built here rather than in the
+    /// xib, matched to the Schedule row so the two popups line up.
+    private func addTransitionRow() {
+        guard let scheduleRow = schedulePopup.superview as? NSStackView,
+              let scheduleLabel = scheduleRow.arrangedSubviews.first,
+              let column = scheduleRow.superview as? NSStackView else { return }
+
+        let label = NSTextField(labelWithString:
+            NSLocalizedString("prefs.transition", comment: "Transition:"))
+        label.alignment = .right
+
+        let popup = FirstMousePopUpButton()
+        popup.addItems(withTitles: [
+            NSLocalizedString("prefs.transition_slow", comment: "Slow"),
+            NSLocalizedString("prefs.transition_normal", comment: "Normal"),
+            NSLocalizedString("prefs.transition_fast", comment: "Fast"),
+            NSLocalizedString("prefs.transition_very_fast", comment: "Very Fast"),
+        ])
+        let period = UserDefaults.standard.double(forKey: Keys.transitionPeriod)
+        popup.selectItem(at: Self.transitionPeriods.firstIndex(of: period) ?? 1)
+        popup.target = self
+        popup.action = #selector(setTransitionSpeed(_:))
+
+        // Both labels take the wider one's width; the popups take the rest.
+        scheduleLabel.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        label.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        popup.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+        let row = NSStackView(views: [label, popup])
+        column.addArrangedSubview(row)
+        NSLayoutConstraint.activate([
+            row.leadingAnchor.constraint(equalTo: scheduleRow.leadingAnchor),
+            row.trailingAnchor.constraint(equalTo: scheduleRow.trailingAnchor),
+            label.widthAnchor.constraint(equalTo: scheduleLabel.widthAnchor),
+        ])
+    }
+
+    @objc private func setTransitionSpeed(_ sender: NSPopUpButton) {
+        let period = Self.transitionPeriods[sender.indexOfSelectedItem]
+        UserDefaults.standard.set(period, forKey: Keys.transitionPeriod)
+        logw("Transition period set to \(period)")
     }
 
     @IBAction func scheduleTimePickers(_ sender: Any) {

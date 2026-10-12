@@ -42,8 +42,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     }
 
     var preferencesWindow: NSWindowController!
-    var prefGeneral: PrefGeneralViewController!
-    var prefShortcuts: PrefShortcutsViewController!
     var customTimeWindow: CustomTimeWindow!
     
     var nightShiftSwitchView: NSView?
@@ -71,10 +69,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         
         
 
-        let settings = (NSApplication.shared.delegate as? AppDelegate)?.settingsWindowController
-        prefGeneral = settings?.panes.compactMap { $0 as? PrefGeneralViewController }.first
-        prefShortcuts = settings?.panes.compactMap { $0 as? PrefShortcutsViewController }.first
-        
         descriptionMenuItem.isEnabled = false
         sliderMenuItem.view = sliderView
         
@@ -116,7 +110,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             NightShiftManager.shared.isNightShiftEnabled.toggle()
         }
 
-        prefShortcuts.bindShortcuts()
+        bindShortcuts()
     }
     
     
@@ -589,5 +583,94 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         NotificationCenter.default.post(name: .terminateApp, object: self)
         
         NSApp.terminate(self)
+    }
+}
+
+
+// MARK: shortcuts
+extension StatusMenuController {
+    func bindShortcuts() {
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.toggleNightShiftShortcut) {
+            if !self.powerMenuItem.isHidden && self.powerMenuItem.isEnabled {
+                self.power(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.incrementColorTempShortcut) {
+            if NightShiftManager.shared.isNightShiftEnabled {
+                if NightShiftManager.shared.colorTemperature == 1.0 {
+                    NSSound.beep()
+                }
+                NightShiftManager.shared.colorTemperature += 0.1
+            } else {
+                NightShiftManager.shared.respond(to: .userEnabledNightShift)
+                NightShiftManager.shared.colorTemperature = 0.1
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.decrementColorTempShortcut) {
+            if NightShiftManager.shared.isNightShiftEnabled {
+                NightShiftManager.shared.colorTemperature -= 0.1
+                if NightShiftManager.shared.colorTemperature == 0.0 {
+                    NSSound.beep()
+                }
+            } else {
+                NSSound.beep()
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableAppShortcut) {
+            if !self.disableCurrentAppMenuItem.isHidden && self.disableCurrentAppMenuItem.isEnabled {
+                self.disableForCurrentApp(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableDomainShortcut) {
+            if !self.disableDomainMenuItem.isHidden && self.disableDomainMenuItem.isEnabled {
+                self.disableForDomain(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableSubdomainShortcut) {
+            if !self.disableSubdomainMenuItem.isHidden && self.disableSubdomainMenuItem.isEnabled {
+                self.disableForSubdomain(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableHourShortcut) {
+            if !self.disableHourMenuItem.isHidden && self.disableHourMenuItem.isEnabled {
+                self.disableHour(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableCustomShortcut) {
+            if !self.disableCustomMenuItem.isHidden && self.disableCustomMenuItem.isEnabled {
+                self.disableCustomTime(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.toggleTrueToneShortcut) {
+            if !self.trueToneMenuItem.isHidden && self.trueToneMenuItem.isEnabled {
+                self.toggleTrueTone(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.toggleDarkModeShortcut, toAction: {
+            SLSSetAppearanceThemeLegacy(!SLSGetAppearanceThemeLegacy())
+        })
     }
 }

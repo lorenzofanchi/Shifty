@@ -44,7 +44,6 @@
 "description.disabled" = "Disabled";
 "description.disabled_hours_minutes" = "Disabled for %02d:%02d";
 
-"prefs.title" = "Settings";
 "prefs.general" = "General";
 "prefs.shortcuts" = "Shortcuts";
 "prefs.about" = "About";
@@ -63,13 +62,5 @@
 "alert.close" = "Close";
 
 "menu.allow_accessibility" = "Allow Website Shifting…";
-"prefs.accessibility_needed" = "macOS needs to allow Shifty to read your browser’s address.";
-"prefs.open_accessibility" = "Open Accessibility Settings…";
-"prefs.needs_access" = "Needs access";
-"prefs.transition" = "Transition:";
-"prefs.transition_slow" = "Slow";
-"prefs.transition_normal" = "Normal";
-"prefs.transition_fast" = "Fast";
-"prefs.transition_very_fast" = "Very Fast";
 "setup.rule_example_domain" = "Disable for github.com";
 "setup.rule_example_subdomain" = "Disable for gist.github.com";

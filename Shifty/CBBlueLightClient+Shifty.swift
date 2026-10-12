@@ -11,7 +11,7 @@ import SwiftLog
 extension CBBlueLightClient {
     static var shared = CBBlueLightClient()
     
-    private var blueLightStatus: Status {
+    var blueLightStatus: Status {
         var status: Status = Status()
         getBlueLightStatus(&status)
         return status

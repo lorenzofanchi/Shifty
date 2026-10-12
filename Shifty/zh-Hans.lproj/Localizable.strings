@@ -42,7 +42,6 @@
 "description.disabled" = "已关闭";
 "description.disabled_hours_minutes" = "已在 %02d:%02d 内关闭";
 
-"prefs.title" = "设置";
 "prefs.general" = "通用";
 "prefs.shortcuts" = "快捷键";
 "prefs.about" = "关于";
@@ -62,13 +61,36 @@
 
 /* Permissions. English in non-English locales until translated. */
 "menu.allow_accessibility" = "Allow Website Shifting…";
-"prefs.accessibility_needed" = "macOS needs to allow Shifty to read your browser’s address.";
-"prefs.open_accessibility" = "Open Accessibility Settings…";
-"prefs.needs_access" = "Needs access";
-"prefs.transition" = "Transition:";
-"prefs.transition_slow" = "Slow";
-"prefs.transition_normal" = "Normal";
-"prefs.transition_fast" = "Fast";
-"prefs.transition_very_fast" = "Very Fast";
 "setup.rule_example_domain" = "Disable for github.com";
 "setup.rule_example_subdomain" = "Disable for gist.github.com";
+
+/* Settings window */
+"Launch Shifty at login" = "随登录自动打开 Shifty 夜览管家";
+"Quick Toggle" = "快速切换";
+"If enabled, click the Menu Bar icon to toggle Night Shift. Right click to open the menu." = "启用后，单击菜单栏图标以切换“夜览”模式。辅助点按以打开菜单。";
+"Website Shifting" = "网站色温调节";
+"If enabled, you can set Night Shift to automatically disable when you visit certain websites." = "开启后，您可以设置在访问特定网站时自动停用“夜览”模式。";
+"Scheduled Dark Mode" = "定时启用深色模式";
+"If enabled, macOS Dark Mode will be automatically set based on the Night Shift schedule." = "启用后，macOS 将自动根据“夜览”模式的设定时间启用或停用深色模式。";
+"True Tone control" = "控制“原彩显示”";
+"If enabled, Night Shift rules for apps and websites will also affect True Tone." = "开启后，“夜览”模式对应的应用程序和网站规则将同时适用于“原彩显示”。";
+"Schedule" = "设定时间";
+"Off" = "关闭";
+"Custom" = "自定义";
+"Sunset to Sunrise" = "日落到日出";
+"From" = "从";
+"To" = "到";
+"Toggle Night Shift" = "切换“夜览”模式开关";
+"Increase color temp" = "增高色温";
+"Decrease color temp" = "降低色温";
+"Disable for current app" = "为当前应用程序禁用";
+"Disable for domain" = "为域名禁用";
+"Disable for subdomain" = "为子域名禁用";
+"Disable for an hour" = "禁用一个小时";
+"Disable for custom time" = "在自定义时间内禁用";
+"Toggle True Tone" = "切换“原彩显示”开关";
+"Toggle Dark Mode" = "切换深色模式开关";
+"Website" = "网站";
+"Translate" = "翻译";
+"Donate" = "捐赠";
+"Credits…" = "致谢名单…";

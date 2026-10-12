@@ -42,7 +42,6 @@
 "description.disabled" = "Выключено";
 "description.disabled_hours_minutes" = "Выключено на %02d:%02d";
 
-"prefs.title" = "Настройки";
 "prefs.general" = "Главное";
 "prefs.shortcuts" = "Сокращения";
 "prefs.about" = "О программе";
@@ -62,13 +61,36 @@
 
 /* Permissions. English in non-English locales until translated. */
 "menu.allow_accessibility" = "Allow Website Shifting…";
-"prefs.accessibility_needed" = "macOS needs to allow Shifty to read your browser’s address.";
-"prefs.open_accessibility" = "Open Accessibility Settings…";
-"prefs.needs_access" = "Needs access";
-"prefs.transition" = "Transition:";
-"prefs.transition_slow" = "Slow";
-"prefs.transition_normal" = "Normal";
-"prefs.transition_fast" = "Fast";
-"prefs.transition_very_fast" = "Very Fast";
 "setup.rule_example_domain" = "Disable for github.com";
 "setup.rule_example_subdomain" = "Disable for gist.github.com";
+
+/* Settings window */
+"Launch Shifty at login" = "Запускать Shifty при старте";
+"Quick Toggle" = "Быстрое переключение";
+"If enabled, click the Menu Bar icon to toggle Night Shift. Right click to open the menu." = "Если включено, то нажмите на иконку в строку меню, чтобы включить Night Shift. Нажмите правой кнопкой мыши, чтобы открыть меню.";
+"Website Shifting" = "Переключение на сайтах";
+"If enabled, you can set Night Shift to automatically disable when you visit certain websites." = "Если включено, вы можете указать Night Shift автоматически отключаться при посещении определенных сайтов.";
+"Scheduled Dark Mode" = "Тёмный режим по расписанию";
+"If enabled, macOS Dark Mode will be automatically set based on the Night Shift schedule." = "Если включено, то запуск Тёмного режима macOS будет автоматически совмещен с расписанием Night Shift.";
+"True Tone control" = "Контроль True Tone";
+"If enabled, Night Shift rules for apps and websites will also affect True Tone." = "Если включено, то правила Night Shift для приложений и сайтов затронут и True Tone.";
+"Schedule" = "Расписание";
+"Off" = "Выключено";
+"Custom" = "Пользовательское";
+"Sunset to Sunrise" = "От эаката до рассвета";
+"From" = "С";
+"To" = "До";
+"Toggle Night Shift" = "Переключить Night Shift";
+"Increase color temp" = "Повысить температуру цвета";
+"Decrease color temp" = "Понизить температуру цвета";
+"Disable for current app" = "Выключить для данного приложения";
+"Disable for domain" = "Выключить для домена";
+"Disable for subdomain" = "Выключить для субдоменов";
+"Disable for an hour" = "Выключить на час";
+"Disable for custom time" = "Выключить на своё время";
+"Toggle True Tone" = "Переключить True Tone";
+"Toggle Dark Mode" = "Переключить Тёмный режим";
+"Website" = "Сайт";
+"Translate" = "Перевести";
+"Donate" = "Поддержать";
+"Credits…" = "Сведения об авторах…";

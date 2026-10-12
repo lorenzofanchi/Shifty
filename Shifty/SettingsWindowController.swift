@@ -4,16 +4,9 @@
 //
 
 import Cocoa
+import SwiftUI
 
-/// One tab of the settings window.
-protocol SettingsPane: NSViewController {
-    var paneLabel: String { get }
-    var paneSymbolName: String { get }
-}
-
-
-/// Replaces MASPreferences, an unmaintained pod carried for three panes.
-/// NSTabViewController in .toolbar style is the stock equivalent.
+/// Hosts SettingsView in an ordinary window.
 ///
 /// This was briefly an NSPanel with .nonactivatingPanel, to sidestep macOS
 /// refusing to activate a menu bar app while another app is frontmost. It got
@@ -23,40 +16,18 @@ protocol SettingsPane: NSViewController {
 /// window is all that's needed here.
 final class SettingsWindowController: NSWindowController {
 
-    /// The panes, in the order given.
-    let panes: [SettingsPane]
-
-    init(panes: [SettingsPane], title: String) {
-        self.panes = panes
-
-        // Pin every pane to the width of the widest one, so switching tabs only
-        // ever changes the window's height. Reading .view here loads each pane's
-        // xib, which is what makes fittingSize meaningful.
-        let fittingSizes = panes.map { $0.view.fittingSize }
-        let paneWidth = fittingSizes.map { $0.width }.max() ?? 0
-        for (pane, size) in zip(panes, fittingSizes) {
-            pane.preferredContentSize = NSSize(width: paneWidth, height: size.height)
+    init() {
+        let hostingController = NSHostingController(rootView: SettingsView())
+        // A window takes its title from its content view controller. SwiftUI's
+        // navigationTitle doesn't reach an AppKit window, so the view reports
+        // the pane's name instead.
+        hostingController.rootView = SettingsView { [weak hostingController] title in
+            hostingController?.title = title
         }
 
-        let tabViewController = NSTabViewController()
-        tabViewController.tabStyle = .toolbar
-
-        for pane in panes {
-            let item = NSTabViewItem(viewController: pane)
-            item.label = pane.paneLabel
-            item.image = NSImage(systemSymbolName: pane.paneSymbolName,
-                                 accessibilityDescription: pane.paneLabel)
-            tabViewController.addTabViewItem(item)
-        }
-
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
-            styleMask: [.titled, .closable],
-            backing: .buffered,
-            defer: false)
-        window.contentViewController = tabViewController
-        window.title = title
-        window.toolbarStyle = .preference
+        let window = NSWindow(contentViewController: hostingController)
+        window.styleMask = [.titled, .closable, .miniaturizable, .fullSizeContentView]
+        window.toolbarStyle = .unified
         window.isReleasedWhenClosed = false
         // The window is created once and reused, so without this it reopens on
         // whichever Space it was last closed on rather than the current one.

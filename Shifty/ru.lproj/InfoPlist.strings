@@ -7,5 +7,5 @@
 */
 
 "CFBundleDisplayName" = "Shifty";
-"NSHumanReadableCopyright" = "© 2017-2019 Нэйт Томпсон. Лицензия GPLv3.";
+"NSHumanReadableCopyright" = "© 2017-2021 Нэйт Томпсон, © 2026 Fruitful Development. Лицензия GPLv3.";
 "NSAppleEventsUsageDescription" = "Shifty необходимо получить доступ к адресу сайта, который открыт прямо сейчас, для того чтобы дать Вам возможность отключить Night Shift для тех сайтов, что Вы выберете сами.";

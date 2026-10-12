@@ -21,14 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     var statusItemClicked: (() -> Void)?
 
-    lazy var settingsWindowController: SettingsWindowController = {
-        return SettingsWindowController(
-            panes: [
-                PrefGeneralViewController(),
-                PrefShortcutsViewController(),
-                PrefAboutViewController()],
-            title: NSLocalizedString("prefs.title", comment: "Settings"))
-    }()
+    lazy var settingsWindowController = SettingsWindowController()
 
     var setupWindow: NSWindow!
     var setupWindowController: NSWindowController!

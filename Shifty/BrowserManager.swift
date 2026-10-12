@@ -55,9 +55,22 @@ class BrowserManager {
     private var focusedWindow: UIElement?
     
     private var cachedBrowsers: [SupportedBrowserID: BrowserProtocol] = [:]
-    
-    
+    private var cachedURL: URL??
+
+
+    /// Each lookup is a round of Apple Events to the browser, and opening the
+    /// menu asks for the domain and subdomain about ten times over, which held
+    /// it up for over half a second. So everything in one pass of the main run
+    /// loop shares a single lookup.
     var currentURL: URL? {
+        if let cachedURL { return cachedURL }
+        let url = lookUpCurrentURL()
+        cachedURL = url
+        DispatchQueue.main.async { self.cachedURL = nil }
+        return url
+    }
+
+    private func lookUpCurrentURL() -> URL? {
         if !UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) {
             return nil
         }

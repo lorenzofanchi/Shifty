@@ -67,13 +67,13 @@
 /* Settings window */
 "Launch Shifty at login" = "Shifty beim Anmelden starten";
 "Quick Toggle" = "Schnelles Umschalten";
-"If enabled, click the Menu Bar icon to toggle Night Shift. Right click to open the menu." = "Wenn aktiviert kann Night Shift bei Klick auf das Menüleisten-Symbol schnell umgeschaltet werden. Ein Rechtsklick auf das Symbol öffnet das Menü.";
+"Click the menu bar icon to turn Night Shift on or off. Right-click it for the menu." = "Ein Klick auf das Menüleisten-Symbol schaltet Night Shift ein oder aus. Ein Rechtsklick öffnet das Menü.";
 "Website Shifting" = "Webseiten-Shift";
-"If enabled, you can set Night Shift to automatically disable when you visit certain websites." = "Wenn aktiviert wird Night Shift bei voreingestellten Internetseiten automatisch deaktiviert.";
+"Turn Night Shift off on the websites you choose." = "Schaltet Night Shift auf ausgewählten Webseiten aus.";
 "Scheduled Dark Mode" = "Planmäßiger Dunkelmodus";
-"If enabled, macOS Dark Mode will be automatically set based on the Night Shift schedule." = "Wenn aktiviert wird macOS den Dunkelmodus basierend auf dem Night-Shift-Zeitplan automatisch umschalten.";
+"Use Dark Mode during Night Shift’s scheduled hours. With no schedule, it follows Night Shift being on or off." = "Verwendet den Dunkelmodus während der geplanten Night-Shift-Zeiten. Ohne Zeitplan folgt er dem Ein- und Ausschalten von Night Shift.";
 "True Tone control" = "True Tone Kontrolle";
-"If enabled, Night Shift rules for apps and websites will also affect True Tone." = "Wenn aktiviert, gelten die Night Shift-Regeln für Apps und Webseiten auch für True Tone.";
+"Your app and website rules turn True Tone off too." = "Die Regeln für Apps und Webseiten schalten auch True Tone aus.";
 "Schedule" = "Zeitplan";
 "Off" = "Aus";
 "Custom" = "Eigene";

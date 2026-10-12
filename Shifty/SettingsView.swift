@@ -104,14 +104,14 @@ private struct GeneralPane: View {
                 logw("Quick Toggle set to \(on)")
             }) {
                 label("Quick Toggle",
-                      caption: "If enabled, click the Menu Bar icon to toggle Night Shift. Right click to open the menu.")
+                      caption: "Click the menu bar icon to turn Night Shift on or off. Right-click it for the menu.")
             }
         }
 
         Section {
             Toggle(isOn: binding($websiteShifting, then: setWebsiteShifting)) {
                 label("Website Shifting",
-                      caption: "If enabled, you can set Night Shift to automatically disable when you visit certain websites.")
+                      caption: "Turn Night Shift off on the websites you choose.")
             }
 
             // macOS only ever shows its own prompt once, so after a denial this
@@ -141,13 +141,13 @@ private struct GeneralPane: View {
         Section {
             Toggle(isOn: binding($darkModeSync, then: setDarkModeSync)) {
                 label("Scheduled Dark Mode",
-                      caption: "If enabled, macOS Dark Mode will be automatically set based on the Night Shift schedule.")
+                      caption: "Use Dark Mode during Night Shift’s scheduled hours. With no schedule, it follows Night Shift being on or off.")
             }
 
             if CBTrueToneClient.shared.state != .unsupported {
                 Toggle(isOn: binding($trueToneControl, then: setTrueToneControl)) {
                     label("True Tone control",
-                          caption: "If enabled, Night Shift rules for apps and websites will also affect True Tone.")
+                          caption: "Your app and website rules turn True Tone off too.")
                 }
             }
         }

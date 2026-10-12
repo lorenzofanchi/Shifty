@@ -67,13 +67,13 @@
 /* Settings window */
 "Launch Shifty at login" = "随登录自动打开 Shifty 夜览管家";
 "Quick Toggle" = "快速切换";
-"If enabled, click the Menu Bar icon to toggle Night Shift. Right click to open the menu." = "启用后，单击菜单栏图标以切换“夜览”模式。辅助点按以打开菜单。";
+"Click the menu bar icon to turn Night Shift on or off. Right-click it for the menu." = "单击菜单栏图标以开启或关闭“夜览”模式。辅助点按以打开菜单。";
 "Website Shifting" = "网站色温调节";
-"If enabled, you can set Night Shift to automatically disable when you visit certain websites." = "开启后，您可以设置在访问特定网站时自动停用“夜览”模式。";
+"Turn Night Shift off on the websites you choose." = "在你选择的网站上关闭“夜览”模式。";
 "Scheduled Dark Mode" = "定时启用深色模式";
-"If enabled, macOS Dark Mode will be automatically set based on the Night Shift schedule." = "启用后，macOS 将自动根据“夜览”模式的设定时间启用或停用深色模式。";
+"Use Dark Mode during Night Shift’s scheduled hours. With no schedule, it follows Night Shift being on or off." = "在“夜览”模式的设定时间内使用深色模式。未设定时间时，深色模式随“夜览”模式开启或关闭。";
 "True Tone control" = "控制“原彩显示”";
-"If enabled, Night Shift rules for apps and websites will also affect True Tone." = "开启后，“夜览”模式对应的应用程序和网站规则将同时适用于“原彩显示”。";
+"Your app and website rules turn True Tone off too." = "应用程序和网站规则也会关闭“原彩显示”。";
 "Schedule" = "设定时间";
 "Off" = "关闭";
 "Custom" = "自定义";

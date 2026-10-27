@@ -66,18 +66,21 @@ class RuleManager {
     private var currentAppDisableRules = Set<AppRule>() {
         didSet {
             UserDefaults.standard.set(try? PropertyListEncoder().encode(currentAppDisableRules), forKey: Keys.currentAppDisableRules)
+            NotificationCenter.default.post(name: .rulesChanged, object: nil)
         }
     }
     
     private var runningAppDisableRules = Set<AppRule>() {
         didSet {
             UserDefaults.standard.set(try? PropertyListEncoder().encode(runningAppDisableRules), forKey: Keys.runningAppDisableRules)
+            NotificationCenter.default.post(name: .rulesChanged, object: nil)
         }
     }
     
     var browserRules = Set<BrowserRule>() {
         didSet(newValue) {
             UserDefaults.standard.set(try? PropertyListEncoder().encode(browserRules), forKey: Keys.browserRules)
+            NotificationCenter.default.post(name: .rulesChanged, object: nil)
         }
     }
     
@@ -270,7 +273,47 @@ class RuleManager {
     }
     
     
+    // MARK: all rules, for Settings
+
+    /// Every rule, sorted, in the shape it's exported in.
+    var rules: Rules {
+        Rules(
+            whileUsing: currentAppDisableRules.map(\.bundleIdentifier).sorted(),
+            whileRunning: runningAppDisableRules.map(\.bundleIdentifier).sorted(),
+            websites: browserRules.sorted { ($0.host, $0.type.rawValue) < ($1.host, $1.type.rawValue) })
+    }
+
+    func removeWhileUsingRule(for bundleID: BundleIdentifier) {
+        currentAppDisableRules = currentAppDisableRules.filter { $0.bundleIdentifier != bundleID }
+        applyRules()
+    }
+
+    func removeWhileRunningRule(for bundleID: BundleIdentifier) {
+        runningAppDisableRules = runningAppDisableRules.filter { $0.bundleIdentifier != bundleID }
+        applyRules()
+    }
+
+    func removeBrowserRule(_ rule: BrowserRule) {
+        browserRules.remove(rule)
+        applyRules()
+    }
+
+    /// Adds imported rules to the ones already here. Merging rather than
+    /// replacing means an import can't lose anything.
+    func add(_ imported: Rules) {
+        currentAppDisableRules.formUnion(imported.whileUsing.map { AppRule(bundleIdentifier: $0, fullScreenOnly: false) })
+        runningAppDisableRules.formUnion(imported.whileRunning.map { AppRule(bundleIdentifier: $0, fullScreenOnly: false) })
+        browserRules.formUnion(imported.websites)
+        applyRules()
+    }
+
+
     private func appSwitched(notification: Notification) {
+        applyRules()
+    }
+
+    /// Turns Night Shift on or off to match the rules for the frontmost app.
+    private func applyRules() {
         BrowserManager.shared.stopBrowserWatcher()
         if isDisabledForCurrentApp || isDisabledForRunningApp {
             NightShiftManager.shared.respond(to: .nightShiftDisableRuleActivated)
@@ -282,6 +325,17 @@ class RuleManager {
     }
 
     
+}
+
+
+
+/// All the rules, as saved to and read from an export file.
+struct Rules: Codable {
+    /// Apps that turn Night Shift off while they're frontmost.
+    var whileUsing: [BundleIdentifier]
+    /// Apps that turn Night Shift off while they're running at all.
+    var whileRunning: [BundleIdentifier]
+    var websites: [BrowserRule]
 }
 
 

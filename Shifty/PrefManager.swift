@@ -9,7 +9,9 @@
 import Cocoa
 
 enum Keys {
+    /// Replaced by quickToggle; read once, to carry the old setting over.
     static let isStatusToggleEnabled = "isStatusToggleEnabled"
+    static let quickToggle = "quickToggle"
     static let isAutoLaunchEnabled = "isAutoLaunchEnabled"
     static let isDarkModeSyncEnabled = "isDarkModeSyncEnabled"
     static let isWebsiteControlEnabled = "isWebsiteControlEnabled"
@@ -49,17 +51,23 @@ class PrefManager {
     private func registerFactoryDefaults() {
         let factoryDefaults = [
             Keys.isAutoLaunchEnabled: NSNumber(value: false),
-            Keys.isStatusToggleEnabled: NSNumber(value: false),
+            Keys.quickToggle: userDefaults.bool(forKey: Keys.isStatusToggleEnabled)
+                ? QuickToggle.left.rawValue
+                : QuickToggle.off.rawValue,
             Keys.isDarkModeSyncEnabled: NSNumber(value: false),
             Keys.isWebsiteControlEnabled: NSNumber(value: false),
             Keys.trueToneControl: NSNumber(value: false),
-            Keys.currentAppDisableRules: NSData(),
-            Keys.runningAppDisableRules: NSData(),
-            Keys.browserRules: NSData(),
             Keys.transitionPeriod: NSNumber(value: -1),
             Keys.hasSetupWindowShown: NSNumber(value: false)
             ] as [String : Any]
 
         userDefaults.register(defaults: factoryDefaults)
     }
+}
+
+
+/// Which click on the menu bar icon turns Night Shift on or off. The other
+/// click opens the menu; with .off, both do.
+enum QuickToggle: String, CaseIterable {
+    case off, left, right
 }

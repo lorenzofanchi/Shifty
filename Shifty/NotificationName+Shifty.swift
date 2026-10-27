@@ -10,4 +10,5 @@ import Foundation
 extension Notification.Name {
     static let terminateApp = Notification.Name("terminateApp")
     static let nightShiftToggled = Notification.Name("nightShiftToggled")
+    static let rulesChanged = Notification.Name("rulesChanged")
 }

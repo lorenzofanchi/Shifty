@@ -25,6 +25,10 @@ final class SettingsWindowController: NSWindowController {
             hostingController?.title = title
         }
 
+        // Lets a pane put buttons in the window's toolbar, as it could in a
+        // SwiftUI Window scene.
+        hostingController.sceneBridgingOptions = [.toolbars]
+
         let window = NSWindow(contentViewController: hostingController)
         window.styleMask = [.titled, .closable, .miniaturizable, .fullSizeContentView]
         window.toolbarStyle = .unified

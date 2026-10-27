@@ -23,6 +23,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     lazy var settingsWindowController = SettingsWindowController()
 
+    override init() {
+        // Registers the factory defaults before anything reads a setting.
+        // Nothing had touched PrefManager since 2019, so they never were.
+        _ = PrefManager.shared
+        super.init()
+    }
+
     var setupWindow: NSWindow!
     var setupWindowController: NSWindowController!
 
@@ -186,30 +193,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
         guard let event = NSApp.currentEvent else { return }
 
-        if UserDefaults.standard.bool(forKey: Keys.isStatusToggleEnabled) {
-            if event.type == .rightMouseDown
-                || event.type == .rightMouseUp
-                || event.modifierFlags.contains(.control)
-            {
-                statusItem.menu = statusMenu
-                statusItem.button?.performClick(sender)
-                statusItem.menu = nil
-            } else if event.type == .leftMouseUp {
+        // Control-click counts as a right click, as it does everywhere else.
+        let isRightClick = event.type == .rightMouseDown
+            || event.type == .rightMouseUp
+            || event.modifierFlags.contains(.control)
+        let isMouseDown = event.type == .leftMouseDown || event.type == .rightMouseDown
+
+        let quickToggle = QuickToggle(rawValue: UserDefaults.standard.string(forKey: Keys.quickToggle) ?? "") ?? .off
+        let togglesNightShift = (quickToggle == .left && !isRightClick)
+            || (quickToggle == .right && isRightClick)
+
+        if togglesNightShift {
+            if !isMouseDown {
                 statusItemClicked?()
             }
-        } else {
-            if event.type == .rightMouseUp
-                || (event.type == .leftMouseUp
-                    && event.modifierFlags.contains(.control))
-            {
-                statusItemClicked?()
-            } else if event.type == .leftMouseDown
-                && !event.modifierFlags.contains(.control)
-            {
-                statusItem.menu = statusMenu
-                statusItem.button?.performClick(sender)
-                statusItem.menu = nil
-            }
+        } else if isMouseDown {
+            statusItem.menu = statusMenu
+            statusItem.button?.performClick(sender)
+            statusItem.menu = nil
         }
     }
 

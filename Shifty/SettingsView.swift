@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 import ServiceManagement
 import AXSwift
 import MASShortcut
@@ -13,13 +14,14 @@ import SwiftLog
 /// laid out like System Settings.
 struct SettingsView: View {
     private enum Pane: CaseIterable, Identifiable {
-        case general, nightShift, shortcuts, about
+        case general, nightShift, rules, shortcuts, about
         var id: Self { self }
 
         var title: String {
             switch self {
             case .general: NSLocalizedString("prefs.general", comment: "General")
             case .nightShift: "Night Shift"
+            case .rules: NSLocalizedString("Rules", comment: "Settings pane listing the disable rules")
             case .shortcuts: NSLocalizedString("prefs.shortcuts", comment: "Shortcuts")
             case .about: NSLocalizedString("prefs.about", comment: "About")
             }
@@ -29,6 +31,7 @@ struct SettingsView: View {
             switch self {
             case .general: "gearshape"
             case .nightShift: "moon"
+            case .rules: "list.bullet"
             case .shortcuts: "command"
             case .about: "info.circle"
             }
@@ -52,17 +55,43 @@ struct SettingsView: View {
                 switch pane ?? .general {
                 case .general: GeneralPane()
                 case .nightShift: NightShiftPane()
+                case .rules: RulesPane()
                 case .shortcuts: ShortcutsPane()
                 case .about: AboutPane()
                 }
             }
             .formStyle(.grouped)
+            // In the window's toolbar, where actions for the whole page go.
+            // Here rather than in RulesPane, whose modifiers the form would
+            // apply to every row.
+            .toolbar {
+                if pane == .rules {
+                    ToolbarItemGroup {
+                        Button("Import…", action: RulesPane.importRules)
+                        Button("Export…", action: RulesPane.exportRules)
+                    }
+                } else if #available(macOS 26, *) {
+                    // Keeps a toolbar on every pane, so the title bar is as
+                    // tall everywhere and the window doesn't change height as
+                    // you switch panes. Hiding the background stops macOS 26
+                    // drawing a sliver of glass around nothing.
+                    ToolbarItem { toolbarPlaceholder }
+                        .sharedBackgroundVisibility(.hidden)
+                } else {
+                    ToolbarItem { toolbarPlaceholder }
+                }
+            }
         }
         .onChange(of: pane, initial: true) { setTitle((pane ?? .general).title) }
         .frame(width: 700, height: 500)
     }
 }
 
+
+/// An invisible toolbar item; see where it's used.
+private var toolbarPlaceholder: some View {
+    Color.clear.frame(width: 1, height: 1).accessibilityHidden(true)
+}
 
 /// A setting's title with a short explanation underneath.
 private func label(_ title: LocalizedStringKey, caption: LocalizedStringKey) -> some View {
@@ -85,7 +114,7 @@ private func binding(_ value: Binding<Bool>, then action: @escaping (Bool) -> Vo
 
 private struct GeneralPane: View {
     @AppStorage(Keys.isAutoLaunchEnabled) private var autoLaunch = false
-    @AppStorage(Keys.isStatusToggleEnabled) private var quickToggle = false
+    @AppStorage(Keys.quickToggle) private var quickToggle = QuickToggle.off
     @AppStorage(Keys.isWebsiteControlEnabled) private var websiteShifting = false
     @AppStorage(Keys.isDarkModeSyncEnabled) private var darkModeSync = false
     @AppStorage(Keys.trueToneControl) private var trueToneControl = false
@@ -99,13 +128,14 @@ private struct GeneralPane: View {
         Section {
             Toggle("Launch Shifty at login", isOn: binding($autoLaunch, then: setAutoLaunch))
 
-            Toggle(isOn: binding($quickToggle) { on in
-                (NSApp.delegate as? AppDelegate)?.setStatusToggle()
-                logw("Quick Toggle set to \(on)")
-            }) {
-                label("Quick Toggle",
-                      caption: "Click the menu bar icon to turn Night Shift on or off. Right-click it for the menu.")
+            Picker(selection: $quickToggle) {
+                Text("Off").tag(QuickToggle.off)
+                Text("Left Click").tag(QuickToggle.left)
+                Text("Right Click").tag(QuickToggle.right)
+            } label: {
+                label("Quick Toggle", caption: quickToggleCaption)
             }
+            .onChange(of: quickToggle) { logw("Quick Toggle set to \(quickToggle)") }
         }
 
         Section {
@@ -150,6 +180,14 @@ private struct GeneralPane: View {
                           caption: "Your app and website rules turn True Tone off too.")
                 }
             }
+        }
+    }
+
+    private var quickToggleCaption: LocalizedStringKey {
+        switch quickToggle {
+        case .off: "Both clicks on the menu bar icon open the menu."
+        case .left: "Click the menu bar icon to turn Night Shift on or off. Right-click it for the menu."
+        case .right: "Right-click the menu bar icon to turn Night Shift on or off. Click it for the menu."
         }
     }
 
@@ -302,6 +340,190 @@ private struct NightShiftPane: View {
                       caption: "How quickly Night Shift fades when Shifty turns it on or off.")
             }
         }
+    }
+}
+
+
+private struct RulesPane: View {
+    @State private var rows = RuleRow.all()
+
+    var body: some View {
+        Group {
+            Section {
+                if rows.isEmpty {
+                    Text("None").foregroundStyle(.secondary)
+                }
+                ForEach(rows) { row in
+                    // An HStack rather than LabeledContent, which lines the
+                    // button up with the name instead of centring it.
+                    HStack(spacing: 10) {
+                        Image(nsImage: row.icon)
+                            .resizable()
+                            .frame(width: row.isNested ? 18 : 24, height: row.isNested ? 18 : 24)
+                            // Under the domain's name rather than its icon.
+                            .padding(.leading, row.isNested ? 34 : 0)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(verbatim: row.name)
+                            Text(row.kind)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        RemoveButton(action: row.remove)
+                    }
+                }
+            } footer: {
+                Text("Add rules from the Shifty menu. Importing adds to the rules you have, and replaces none of them.")
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .rulesChanged)) { _ in
+            rows = RuleRow.all()
+        }
+    }
+
+    static func exportRules() {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = "Shifty Rules.json"
+        panel.allowedContentTypes = [.json]
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            try encoder.encode(RuleManager.shared.rules).write(to: url)
+            logw("Exported rules to \(url.path)")
+        } catch {
+            logw("Error: could not export rules: \(error)")
+            NSAlert(error: error).runModal()
+        }
+    }
+
+    static func importRules() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.json]
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+
+        do {
+            let imported = try JSONDecoder().decode(Rules.self, from: Data(contentsOf: url))
+            RuleManager.shared.add(imported)
+            logw("Imported rules from \(url.path)")
+        } catch {
+            logw("Error: could not import rules: \(error)")
+            let alert = NSAlert()
+            alert.messageText = NSLocalizedString("Couldn’t import these rules", comment: "")
+            alert.informativeText = NSLocalizedString("The file isn’t a set of rules exported from Shifty.", comment: "")
+            alert.runModal()
+        }
+    }
+}
+
+/// One rule of any kind, as a line in the Rules pane.
+private struct RuleRow: Identifiable {
+    enum Rule: Hashable {
+        case whileUsing(BundleIdentifier)
+        case whileRunning(BundleIdentifier)
+        case website(BrowserRule)
+    }
+
+    let rule: Rule
+    let name: String
+    let icon: NSImage
+    /// A subdomain rule shown under the rule for its domain.
+    let isNested: Bool
+    /// A domain rule with subdomains kept on under it, so not the whole domain.
+    let hasExceptions: Bool
+
+    var id: Rule { rule }
+
+    /// Every rule, sorted by name, with subdomain rules under the rule for
+    /// their domain when there is one. An app with both kinds of app rule gets
+    /// a line for each, so each can be removed on its own.
+    static func all() -> [RuleRow] {
+        let rules = RuleManager.shared.rules
+        let domains = rules.websites.filter { $0.type == .domain }
+        let subdomains = rules.websites.filter { $0.type != .domain }
+
+        func domain(of subdomain: BrowserRule) -> BrowserRule? {
+            domains.first { subdomain.host == $0.host || subdomain.host.hasSuffix("." + $0.host) }
+        }
+        func byName(_ a: RuleRow, _ b: RuleRow) -> Bool {
+            a.name.localizedStandardCompare(b.name) == .orderedAscending
+        }
+
+        let topLevel = rules.whileUsing.map { RuleRow(.whileUsing($0)) }
+            + rules.whileRunning.map { RuleRow(.whileRunning($0)) }
+            + domains.map { RuleRow(.website($0)) }
+            + subdomains.filter { domain(of: $0) == nil }.map { RuleRow(.website($0)) }
+
+        return topLevel.sorted(by: byName).flatMap { row -> [RuleRow] in
+            guard case .website(let rule) = row.rule, rule.type == .domain else { return [row] }
+            let nested = subdomains
+                .filter { domain(of: $0) == rule }
+                .map { RuleRow(.website($0), isNested: true) }
+                .sorted(by: byName)
+            let hasExceptions = nested.contains {
+                if case .website(let subdomain) = $0.rule { subdomain.type == .subdomainEnabled } else { false }
+            }
+            return [hasExceptions ? RuleRow(row.rule, hasExceptions: true) : row] + nested
+        }
+    }
+
+    init(_ rule: Rule, isNested: Bool = false, hasExceptions: Bool = false) {
+        self.rule = rule
+        self.isNested = isNested
+        self.hasExceptions = hasExceptions
+        switch rule {
+        case .whileUsing(let bundleID), .whileRunning(let bundleID):
+            // The name Finder shows, so in the system's language and without
+            // ".app". An app that isn't installed shows its bundle identifier.
+            if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+                let name = FileManager.default.displayName(atPath: url.path)
+                self.name = name.hasSuffix(".app") ? String(name.dropLast(4)) : name
+                icon = NSWorkspace.shared.icon(forFile: url.path)
+            } else {
+                name = bundleID
+                icon = NSWorkspace.shared.icon(for: .applicationBundle)
+            }
+        case .website(let browserRule):
+            name = browserRule.host
+            icon = NSImage(systemSymbolName: "globe", accessibilityDescription: nil) ?? NSImage()
+        }
+    }
+
+    var kind: LocalizedStringKey {
+        switch rule {
+        case .whileUsing: "Disabled while using"
+        case .whileRunning: "Disabled while running"
+        case .website(let browserRule):
+            switch browserRule.type {
+            case .domain: hasExceptions
+                ? "Disabled for the domain, except the subdomains below"
+                : "Disabled for the whole domain"
+            case .subdomainDisabled: "Disabled for this subdomain"
+            case .subdomainEnabled: "Kept on, although its domain is disabled"
+            }
+        }
+    }
+
+    func remove() {
+        switch rule {
+        case .whileUsing(let bundleID): RuleManager.shared.removeWhileUsingRule(for: bundleID)
+        case .whileRunning(let bundleID): RuleManager.shared.removeWhileRunningRule(for: bundleID)
+        case .website(let browserRule): RuleManager.shared.removeBrowserRule(browserRule)
+        }
+    }
+}
+
+private struct RemoveButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(role: .destructive, action: action) {
+            // The destructive role alone doesn't turn a macOS button red.
+            Text("Remove").foregroundStyle(.red)
+        }
+        .buttonStyle(.bordered)
     }
 }
 

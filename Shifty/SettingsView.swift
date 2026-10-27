@@ -372,8 +372,12 @@ private struct RulesPane: View {
                         RemoveButton(action: row.remove)
                     }
                 }
-            } footer: {
+            } header: {
+                // Above the list rather than under it, so it stays put as rules
+                // are added.
                 Text("Add rules from the Shifty menu. Importing adds to the rules you have, and replaces none of them.")
+                    .font(.subheadline)
+                    .fontWeight(.regular)
                     .foregroundStyle(.secondary)
             }
         }
@@ -384,7 +388,9 @@ private struct RulesPane: View {
 
     static func exportRules() {
         let panel = NSSavePanel()
-        panel.nameFieldStringValue = "Shifty Rules.json"
+        // Dated, so exports made on different days don't overwrite each other.
+        let date = Date.ISO8601FormatStyle(timeZone: .current).year().month().day().format(Date())
+        panel.nameFieldStringValue = "Shifty Rules \(date).json"
         panel.allowedContentTypes = [.json]
         guard panel.runModal() == .OK, let url = panel.url else { return }
 

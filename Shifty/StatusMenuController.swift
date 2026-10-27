@@ -542,12 +542,37 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         // also services the main queue, so ordering the window from here races
         // the menu closing. A short delay clears it.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            controller.showWindow(sender)
-            controller.window?.makeKeyAndOrderFront(sender)
-            controller.window?.orderFrontRegardless()
-
+            // Focus first, and the window once it has arrived. Shown while
+            // Shifty is still in the background, the window lays its sidebar
+            // out for an inactive window, then shifts it 10pt when focus lands.
+            self.whenActive {
+                controller.showWindow(sender)
+                controller.window?.makeKeyAndOrderFront(sender)
+                controller.window?.orderFrontRegardless()
+            }
             self.takeFocusFromFrontmostApp()
         }
+    }
+
+    /// Runs `action` once Shifty is the active app, or after half a second if
+    /// it never becomes it, so the window still opens.
+    private func whenActive(_ action: @escaping () -> Void) {
+        if NSApp.isActive {
+            action()
+            return
+        }
+        var hasRun = false
+        var observer: NSObjectProtocol?
+        let runOnce = {
+            guard !hasRun else { return }
+            hasRun = true
+            observer.map(NotificationCenter.default.removeObserver)
+            action()
+        }
+        observer = NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main
+        ) { _ in runOnce() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: runOnce)
     }
     
     

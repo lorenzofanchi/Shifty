@@ -169,7 +169,11 @@ class NightShiftManager {
             if UserDefaults.standard.bool(forKey: Keys.trueToneControl) {
                 CBTrueToneClient.shared.isTrueToneEnabled = false
             }
-        case .nightShiftDisableRuleDeactivated:
+        // A subdomain kept on under a disabled domain means no rule applies
+        // there, so it's handled as a rule being lifted: back to the schedule
+        // or the person's choice. It used to force Night Shift on, which
+        // turned it on in daytime whenever such a page came to the front.
+        case .nightShiftDisableRuleDeactivated, .nightShiftEnableRuleActivated:
             if !isDisabledWithTimer && !isDisableRuleActive {
                 switch userSet {
                 case .notSet:
@@ -183,13 +187,6 @@ class NightShiftManager {
             
             if !isDisableRuleActive && UserDefaults.standard.bool(forKey: Keys.trueToneControl) {
                 CBTrueToneClient.shared.isTrueToneEnabled = true
-            }
-        case .nightShiftEnableRuleActivated:
-            switch userSet {
-            case .on, .notSet:
-                client.setNightShiftEnabled(true)
-            case .off:
-                client.setNightShiftEnabled(false)
             }
         case .nightShiftEnableRuleDeactivated:
             if isDisabledWithTimer || isDisableRuleActive {

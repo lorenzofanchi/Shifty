@@ -7,7 +7,7 @@ A menu bar app for macOS that turns Night Shift off for the apps and websites yo
 
 <p align="center"><img src="docs/en/images/shifty-screenshot-large.png" width="560" alt="Shifty's menu bar menu, showing the Night Shift and True Tone switches, the colour temperature slider, and the disable rules"></p>
 
-## Features
+## ✨ Features
 
 - 🪟 **Per-app rules.** Turn Night Shift off while you're using an app, or for as long as an app is
   running at all, even in the background.
@@ -15,15 +15,59 @@ A menu bar app for macOS that turns Night Shift off for the apps and websites yo
   Chromium, Edge, Brave, Opera or Vivaldi.
 - ⏱️ **Timed pauses.** Turn it off for an hour, or for a duration you type in.
 - 🌡️ **Colour temperature slider** in the menu, rather than buried in System Settings.
-- 👆 **Quick Toggle.** Click the menu bar icon to switch Night Shift on or off, and right-click for
-  the menu.
+- 👆 **Quick Toggle.** Pick which click on the menu bar icon switches Night Shift on or off, left or
+  right. The other click opens the menu.
 - 🗓️ **Schedule.** Sunset to sunrise, or custom hours, set from Shifty's settings.
 - 🌗 **Transition speed.** Make Night Shift fade on and off faster or slower than macOS does.
 - 🌙 **Dark Mode on the Night Shift schedule**, so the two change together.
 - 🖥️ **True Tone control**, with your Night Shift rules applied to it as well.
 - ⌨️ **Global keyboard shortcuts** for every action in the menu.
+- 📋 **All your rules in one place.** See every app and website rule in Settings, remove the ones you
+  don't need, and export or import them as a file.
 
-## Build from source
+## 🖱️ Usage
+
+### The menu
+
+Click the Shifty icon in the menu bar. If Quick Toggle uses that click, use the other one.
+
+- **Night Shift** and **True Tone** switches, with the colour temperature slider under them.
+- **Disable while using** the app you're in, or **Disable when** it's running at all.
+- **Disable for** the website you're on: the whole domain, or just the subdomain. These appear when
+  a supported browser is in front and Website Shifting is on.
+- **Disable for an hour**, or **Disable for custom time** to type in how long.
+
+<p align="center"><img src="docs/en/images/custom-duration.png" width="480" alt="The dialog for disabling Night Shift for a custom duration"></p>
+
+### ⚙️ Settings
+
+Choose **Settings…** in the menu.
+
+- **General:** launch at login, Quick Toggle (Off, Left Click or Right Click), Website Shifting,
+  Scheduled Dark Mode and True Tone control.
+- **Night Shift:** the schedule (Off, Custom or Sunset to Sunrise) and the transition speed (Slow,
+  Normal, Fast or Very Fast).
+- **Rules:** every rule in one list, sorted by name, with subdomain rules under their domain.
+  Remove rules here, or use **Import…** and **Export…** in the toolbar to move them to another Mac.
+  Importing adds to the rules you have and replaces none of them.
+- **Shortcuts:** record a global shortcut for any action in the menu. None are set by default.
+
+### 🔐 Permissions
+
+Website Shifting needs two permissions, and macOS asks for each the first time it's needed:
+
+- **Accessibility**, to notice when you switch windows or tabs.
+- **Automation** for each browser, to read the address of the tab you're looking at.
+
+If you said no, allow Shifty in System Settings → Privacy & Security.
+
+## ☕ Support
+
+If Shifty makes your evenings a little easier on the eyes, you can buy me a coffee:
+
+<a href="https://ko-fi.com/fruitfuldevelopment"><img src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" height="36" alt="Buy me a coffee at ko-fi.com"></a>
+
+## 🛠️ Build from source
 
 You need macOS 14 or later and Xcode 26 or later. Shifty is tested on macOS 27. The CocoaPods
 dependencies are checked in, so there's nothing else to install.
@@ -43,40 +87,7 @@ There are no prebuilt downloads and no automatic updates.
 Shifty needs a Mac that [supports Night Shift](https://support.apple.com/en-us/HT207513#requirements).
 True Tone control needs a [Mac with True Tone](https://support.apple.com/HT208909).
 
-## Usage
-
-### The menu
-
-Click the Shifty icon in the menu bar, or right-click it if Quick Toggle is on.
-
-- **Night Shift** and **True Tone** switches, with the colour temperature slider under them.
-- **Disable while using** the app you're in, or **Disable when** it's running at all.
-- **Disable for** the website you're on: the whole domain, or just the subdomain. These appear when
-  a supported browser is in front and Website Shifting is on.
-- **Disable for an hour**, or **Disable for custom time** to type in how long.
-
-<p align="center"><img src="docs/en/images/custom-duration.png" width="480" alt="The dialog for disabling Night Shift for a custom duration"></p>
-
-### Settings
-
-Choose **Settings…** in the menu.
-
-- **General:** launch at login, Quick Toggle, Website Shifting, Scheduled Dark Mode and True Tone
-  control.
-- **Night Shift:** the schedule (Off, Custom or Sunset to Sunrise) and the transition speed (Slow,
-  Normal, Fast or Very Fast).
-- **Shortcuts:** record a global shortcut for any action in the menu. None are set by default.
-
-### Permissions
-
-Website Shifting needs two permissions, and macOS asks for each the first time it's needed:
-
-- **Accessibility**, to notice when you switch windows or tabs.
-- **Automation** for each browser, to read the address of the tab you're looking at.
-
-If you said no, allow Shifty in System Settings → Privacy & Security.
-
-## How it's built
+## 🔍 How it's built
 
 - AppKit for the menu bar menu, SwiftUI for the Settings window
 - Private CoreBrightness classes (`CBBlueLightClient`, `CBTrueToneClient`) to drive Night Shift
@@ -88,7 +99,7 @@ If you said no, allow Shifty in System Settings → Privacy & Security.
 Night Shift and True Tone have no public API, so Shifty relies on private system frameworks. It
 works today; a future version of macOS could break it.
 
-## About this fork
+## 🍴 About this fork
 
 Shifty was made by Nate Thompson, and this is a fork of
 [thompsonate/Shifty](https://github.com/thompsonate/Shifty), maintained by Fruitful Development.
@@ -97,19 +108,17 @@ Upstream's last release was in 2021, and it no longer built with current version
 This fork brings it up to date. It builds with current Xcode, needs macOS 14, and drops
 dependencies that stopped working: Microsoft App Center, which shut down in 2025, and Sparkle,
 which pointed at upstream's update feed. It also adds a few things of its own, such as the
-transition speed setting and a redesigned Settings window. Shifty is still Nate's design, and most
+transition speed setting, the Rules pane and a redesigned Settings window. Shifty is still Nate's design, and most
 of the code is his.
 
 To help translate Shifty, see [upstream's translation page](https://shifty.natethompson.io/translate).
 
-## Support
-
-If Shifty makes your evenings a little easier on the eyes, you can buy me a coffee:
-
-<a href="https://ko-fi.com/fruitfuldevelopment"><img src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" height="36" alt="Buy me a coffee at ko-fi.com"></a>
-
-## License
+## 📄 License
 
 GPLv3, as upstream, see [LICENSE](LICENSE). Contributions welcome.
 
 © 2017-2021 Nate Thompson. Modifications © 2026 Fruitful Development.
+
+---
+
+<p align="center">Made with care by Fruitful Development 🍎</p>

@@ -28,13 +28,6 @@ APP="$ARCHIVE/Products/Applications/Shifty.app"
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP/Contents/Info.plist")
 BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$APP/Contents/Info.plist")
 
-# Keep the copy we're replacing the first time, in case it was someone else's
-# signed release rather than one of ours.
-if [ -d "$INSTALLED" ] && [ ! -d "$ARCHIVE_DIR/Shifty-replaced.app" ]; then
-    cp -R "$INSTALLED" "$ARCHIVE_DIR/Shifty-replaced.app"
-    echo "kept the previous $INSTALLED as $ARCHIVE_DIR/Shifty-replaced.app"
-fi
-
 pkill -f "Shifty.app/Contents/MacOS/Shifty" 2>/dev/null || true
 sleep 1
 

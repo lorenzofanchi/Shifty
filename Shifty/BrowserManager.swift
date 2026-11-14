@@ -208,7 +208,11 @@ class BrowserManager {
                 if let role = try? element.role(), role == .staticText {
                     fallthrough
                 }
-            case .focusedWindowChanged:
+            // A tab switch or a page load changes the window's title. That's
+            // the dependable signal: the static-text changes above are a side
+            // effect that Brave doesn't always produce, which left Night Shift
+            // as it was until something else (like opening the menu) did.
+            case .focusedWindowChanged, .titleChanged:
                 do {
                     self.focusedWindow  = try observedApp.attribute(.focusedWindow)
                 } catch {
@@ -223,6 +227,7 @@ class BrowserManager {
         }
         try browserObserver?.addNotification(.valueChanged, forElement: observedApp)
         try browserObserver?.addNotification(.focusedWindowChanged, forElement: observedApp)
+        try browserObserver?.addNotification(.titleChanged, forElement: observedApp)
         try browserObserver?.addNotification(.uiElementDestroyed, forElement: observedApp)
         focusedWindow = try observedApp.attribute(.focusedWindow)
     }
@@ -236,6 +241,7 @@ class BrowserManager {
             do {
                 try browserObserver.removeNotification(.valueChanged, forElement: observedApp)
                 try browserObserver.removeNotification(.focusedWindowChanged, forElement: observedApp)
+                try browserObserver.removeNotification(.titleChanged, forElement: observedApp)
                 try browserObserver.removeNotification(.uiElementDestroyed, forElement: observedApp)
             } catch let error {
                 logw("Error: Couldn't remove notifications: \(error)")

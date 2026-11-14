@@ -312,8 +312,9 @@ class RuleManager {
         applyRules()
     }
 
-    /// Turns Night Shift on or off to match the rules for the frontmost app.
-    private func applyRules() {
+    /// Turns Night Shift on or off to match the rules for the frontmost app,
+    /// and starts watching its tabs if it's a browser.
+    func applyRules() {
         BrowserManager.shared.stopBrowserWatcher()
         if isDisabledForCurrentApp || isDisabledForRunningApp {
             NightShiftManager.shared.respond(to: .nightShiftDisableRuleActivated)

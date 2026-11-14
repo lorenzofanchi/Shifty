@@ -90,6 +90,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NightShiftManager.shared.onNightShiftChange {
             self.updateMenuBarIcon()
         }
+
+        // Rules are otherwise only applied when the frontmost app changes, so
+        // a browser that was already in front at launch went unwatched: its
+        // tabs didn't switch Night Shift until you switched apps and back.
+        RuleManager.shared.applyRules()
         
         statusItem.behavior = .terminationOnRemoval
         statusItem.isVisible = true

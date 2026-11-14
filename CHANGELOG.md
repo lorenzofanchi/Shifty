@@ -3,6 +3,14 @@
 All notable changes to this fork of Shifty. Dates are release dates. For versions up to 1.2, see
 [upstream's releases](https://github.com/thompsonate/Shifty/releases).
 
+## 1.4.2 — 2026-11-14
+
+### Fixed
+- Website Shifting no longer misses tab switches. Night Shift sometimes stayed on after switching to
+  a tab on a disabled website, until you opened the menu.
+- Website Shifting works from the moment Shifty starts. If a browser was already in front, its tabs
+  were ignored until you switched to another app and back.
+
 ## 1.4.1 — 2026-11-03
 
 ### Changed
